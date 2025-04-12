@@ -1,0 +1,17 @@
+\documentclass[11pt, a4paper]{article}
+%start preamble
+\usepackage{preamble}
+\input{macros/macros}
+%end preamble
+\usepackage{subfiles} 
+\title{Title} 
+\author{Name}
+\begin{document}
+\maketitle
+\newpage \tableofcontents
+\newpage \subfile{sections/section1}
+\newpage \subfile{sections/section2}
+...
+\newpage \bibliography{references}{}
+\bibliographystyle{alpha} 
+\end{document}
