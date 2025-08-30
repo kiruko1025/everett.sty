@@ -1,0 +1,40 @@
+\documentclass[12pt,a4paper,oneside]{scrbook}
+\input{preamble}
+\usepackage{subfiles} 
+\title{Math} 
+\author{Everett}
+
+\begin{document}
+\frontmatter
+\maketitle
+\newpage
+\tableofcontents
+
+\mainmatter
+\part{Discrete Math}
+\parttoc
+\part{Abstract Algebra}
+\parttoc
+\subfile{sections/abstract/group.tex}
+\subfile{sections/abstract/ring.tex}
+\part{Linear Algebra}
+\parttoc
+\part{Calculus}
+\parttoc
+\part{Real Analysis}
+\parttoc
+\part{Complex Analysis}
+\parttoc
+\part{Probability}
+\parttoc
+\part{Set Theory}
+\parttoc
+\part{Category Theory}
+\parttoc
+\part{Representation Theory}
+\parttoc
+\part{Topology}
+\parttoc
+\backmatter
+
+\end{document}
