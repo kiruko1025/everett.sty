@@ -1,7 +1,7 @@
-PWD /home/everett/Desktop/math-book
+PWD /home/everett/Desktop/others/everett.sty/book-template
 INPUT /usr/share/texmf-dist/web2c/texmf.cnf
 INPUT /var/lib/texmf/web2c/pdftex/pdflatex.fmt
-INPUT /home/everett/Desktop/math-book/main.tex
+INPUT /home/everett/Desktop/others/everett.sty/book-template/main.tex
 OUTPUT out/main.log
 INPUT /usr/share/texmf-dist/tex/latex/koma-script/scrbook.cls
 INPUT /usr/share/texmf-dist/tex/latex/koma-script/scrbook.cls

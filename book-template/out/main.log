@@ -1,10 +1,10 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025/Arch Linux) (preloaded format=pdflatex 2025.3.21)  29 AUG 2025 22:14
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2026/dev/Arch Linux) (preloaded format=pdflatex 2025.9.13)  19 SEP 2025 23:00
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**/home/everett/Desktop/math-book/main.tex
-(/home/everett/Desktop/math-book/main.tex
+**/home/everett/Desktop/others/everett.sty/book-template/main.tex
+(/home/everett/Desktop/others/everett.sty/book-template/main.tex
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
 (/usr/share/texmf-dist/tex/latex/koma-script/scrbook.cls
@@ -2162,14 +2162,14 @@ Package logreq Info: Writing requests to 'main.run.xml'.
  ) 
 Here is how much of TeX's memory you used:
  67650 strings out of 475171
- 1543790 string characters out of 5767103
+ 1543867 string characters out of 5767095
  2774307 words of memory out of 5000000
  89441 multiletter control sequences out of 15000+600000
  647240 words of font info for 171 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 123i,20n,148p,10947b,2093s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 123i,20n,148p,10970b,2093s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmr17.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmss12.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmssbx10.pfb>
-Output written on out/main.pdf (18 pages, 163909 bytes).
+Output written on out/main.pdf (18 pages, 163939 bytes).
 PDF statistics:
  230 PDF objects out of 1000 (max. 8388607)
  196 compressed objects within 2 object streams
