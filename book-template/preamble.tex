@@ -1,3 +1,55 @@
-\usepackage{everett}
 \usepackage[english]{babel}
-\usepackage{lipsum}
+\usepackage{csquotes}
+% Choose light (Catppuccin Latte) or dark (Catppuccin Macchiato).
+% The main-light.tex and main-dark.tex entry points override this default.
+\providecommand{\booktheme}{light}
+\expandafter\PassOptionsToPackage\expandafter{\booktheme}{everett}
+\usepackage[panbook]{everett}
+\usepackage{macro}   % Mathematical shortcuts are a separate package.
+\input{book-design}
+
+% Keep project-specific changes here instead of modifying the style packages.
+\setcounter{tocdepth}{1}
+\setcounter{secnumdepth}{2}
+
+% Each environment keeps its own sequence, resetting at every chapter.
+% Delete these four lines to use the packages' document-wide numbering.
+\counterwithin{definition}{chapter}
+\counterwithin{theorem}{chapter}
+\counterwithin{lemma}{chapter}
+\counterwithin{prop}{chapter}
+% PDF destinations must be unique as well as the printed theorem numbers.
+\renewcommand{\theHdefinition}{\theHchapter.\arabic{definition}}
+\renewcommand{\theHtheorem}{\theHchapter.\arabic{theorem}}
+\renewcommand{\theHlemma}{\theHchapter.\arabic{lemma}}
+\renewcommand{\theHprop}{\theHchapter.\arabic{prop}}
+\crefname{definition}{definition}{definitions}
+\Crefname{definition}{Definition}{Definitions}
+\crefname{theorem}{theorem}{theorems}
+\Crefname{theorem}{Theorem}{Theorems}
+\crefname{lemma}{lemma}{lemmas}
+\Crefname{lemma}{Lemma}{Lemmas}
+\crefname{prop}{proposition}{propositions}
+\Crefname{prop}{Proposition}{Propositions}
+
+\lstdefinestyle{everett-code}{
+  basicstyle=\footnotesize\ttfamily\color{bookInk},
+  keywordstyle=\color{bookPurple}\bfseries,
+  commentstyle=\color{bookMuted},
+  stringstyle=\color{bookGreen},
+  backgroundcolor=\color{ctpMantle},
+  rulecolor=\color{bookBlue},
+  frame=l,
+  framerule=2pt,
+  framesep=5pt,
+  xleftmargin=7pt,
+  xrightmargin=2pt,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  breaklines=true,
+  tabsize=4
+}
+\lstset{style=everett-code}
+
+\input{macros/macros}

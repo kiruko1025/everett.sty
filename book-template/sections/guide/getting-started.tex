@@ -1,0 +1,126 @@
+\documentclass[../../main.tex]{subfiles}
+\begin{document}
+\chapter{Writing and organizing a chapter}
+\label{ch:writing}
+
+\begin{objectives}
+\begin{itemize}
+  \item Add a chapter and its references.
+  \item Use the margin for supporting material.
+  \item Choose a suitable teaching environment.
+\end{itemize}
+\end{objectives}
+
+\section{The project structure}
+The main document orders the chapters. Each chapter uses \texttt{subfiles}
+to inherit the preamble. Keep packages beside \texttt{main.tex} and your
+own notation in \texttt{macros/macros.tex}.
+
+\begin{note}
+From \texttt{book-template}, run
+\texttt{latexmk -pdf -outdir=build main.tex}. This also updates the
+bibliography with Biber.
+\end{note}
+
+To add a chapter, copy a file at the same directory depth, change its title and
+labels, and add a corresponding command to \texttt{main.tex}:
+\begin{lstlisting}[language={[LaTeX]TeX}]
+\subfile{sections/abstract/new-chapter.tex}
+\end{lstlisting}
+The first line of the chapter should point to the main document:
+\begin{lstlisting}[language={[LaTeX]TeX}]
+\documentclass[../../main.tex]{subfiles}
+\begin{document}
+\chapter{Your chapter title}
+% Your content goes here.
+\end{document}
+\end{lstlisting}
+
+\section{Text and margin}
+The main column carries the argument; the margin holds supporting notes
+and figures.\sidenote{Keep a note short enough to read at a
+glance. A long proof belongs in the main text.}
+Use \verb|\sidenote{...}| for numbered notes and
+\verb|\marginnote{...}| for unnumbered notes. Place these commands in
+ordinary prose, outside theorem boxes.
+
+The \texttt{marginfigure} and \texttt{margintable} environments hold small
+illustrations and tables. Use \verb|\sidecaption{...}| inside an ordinary
+figure to put its caption in the margin, as in the calculus chapter.
+The \texttt{fullwidth} environment extends material across both columns;
+\texttt{figure*} and \texttt{table*} do the same for floats. Leave the
+adjacent margin clear when using a full-width display.
+
+Open a chapter with a short \texttt{objectives} environment containing an
+\texttt{itemize} list. It places a learning-objectives card in the margin.
+The \texttt{bigidea} environment highlights a central principle, while
+\texttt{recap} collects the lesson at the end. Both \texttt{bigidea} and
+\texttt{exercise} accept an optional title; their numbers restart in each
+chapter. For example:
+\begin{lstlisting}[language={[LaTeX]TeX}]
+\begin{exercise}[A useful special case]
+\label{ex:special-case}
+Prove the claim when n = 2.
+\end{exercise}
+\end{lstlisting}
+
+\section{Definitions, examples, and references}
+Use \texttt{eg} for examples and \texttt{prop} for propositions.
+Definitions, theorems, lemmas, and propositions have separate counters
+within each chapter; examples, corollaries, remarks, and notes are unnumbered.
+
+\begin{definition}[Even integer]\label{def:even}
+An integer $n\in\ZZ$ is \vocab{even} if there exists $k\in\ZZ$ such that $n=2k$.
+\end{definition}
+
+\begin{eg}
+By \cref{def:even}, the integer $14$ is even: take $k=7$.
+\end{eg}
+
+\begin{theorem}\label{thm:even-sum}
+The sum of two even integers is even.
+\end{theorem}
+\begin{proof}
+Write $m=2a$ and $n=2b$ with $a,b\in\ZZ$. Then
+$m+n=2(a+b)$, and $a+b$ is an integer.
+\end{proof}
+
+Put \verb|\label{thm:even-sum}| inside the theorem.
+Reference it with \verb|\cref{thm:even-sum}| to obtain \cref{thm:even-sum}.
+Use \verb|\Cref| at the start of a sentence. Label numbered objects;
+an unnumbered example has no example number to reference.
+
+\section{Citations and bibliography files}
+Store reading references in \texttt{references.bib} and illustration credits
+in \texttt{images.bib}. Mark credits with \texttt{keywords = \{image\}};
+this keyword separates them from the main bibliography.
+
+For example, \textcite{judson2020} is an openly available algebra text.
+A parenthetical citation looks like this \parencite{concrete1994}.
+Both commands use an entry key from a bibliography file:
+\begin{lstlisting}[language={[LaTeX]TeX}]
+\textcite{judson2020}
+\parencite{concrete1994}
+\end{lstlisting}
+
+\begin{remark}
+Bibliography entries appear only when cited. Use \verb|\nocite{entry-key}|
+to include an uncited reading-list item before printing the bibliography.
+After editing a \texttt{.bib} file, rebuild with
+\texttt{latexmk}; a single LaTeX pass is not enough.
+\end{remark}
+
+\section{Adapting the design}
+Edit \texttt{book-design.tex} to change the page layout, fonts, headings,
+or teaching callouts. Edit \texttt{preamble.tex} to change theorem numbering
+or code formatting, and \texttt{main.tex} for the title, subtitle, author,
+and date.
+
+Set \verb|\booktheme| in the preamble to \texttt{light} for Catppuccin Latte
+or \texttt{dark} for Macchiato. Alternatively, build \texttt{main-light.tex}
+or \texttt{main-dark.tex}; both use the same chapters and metadata.
+
+The \texttt{macro} package supplies shortcuts such as $\RR$, $\ZZ$,
+$\abs{x}$, $\norm{v}$, $\floor{x}$, and $\Hom(G,H)$. Use these commands
+in math mode. The appendix collects a few more useful examples.
+\end{document}

@@ -1,0 +1,67 @@
+\documentclass[../../main.tex]{subfiles}
+\begin{document}
+\chapter{Notation and reusable patterns}
+\label{app:notation}
+
+\section{Frequently used macros}
+Most commands in \texttt{macro.sty} are intended for math mode. The table
+below gives a small selection; the package source contains additional
+notation for algebra, geometry, topology, number theory, and set theory.
+
+\begin{fullwidth}
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{ll}
+  \toprule
+  Source & Result \\
+  \midrule
+  \verb|\NN, \ZZ, \QQ, \RR, \CC| & $\NN,\ZZ,\QQ,\RR,\CC$ \\
+  \verb|\abs{x}, \norm{v}| & $\abs{x},\norm{v}$ \\
+  \verb|\floor{x}, \ceiling{x}| & $\floor{x},\ceiling{x}$ \\
+  \verb|\cbrt{x}, \half, \eps| & $\cbrt{x},\half,\eps$ \\
+  \verb|\Hom(G,H), \Aut(G)| & $\Hom(G,H),\Aut(G)$ \\
+  \verb|\Ker f, \img f, \rank A| & $\Ker f,\img f,\rank A$ \\
+  \verb|\Zc{n}, \Zm{n}| & $\Zc{n},\Zm{n}$ \\
+  \verb|\injto, \surjto, \taking{f}| & $\injto,\surjto,\taking{f}$ \\
+  \verb|\fpartial{f}{x}| & $\fpartial{f}{x}$ \\
+  \verb|\arc{AB}, \seg{AB}, \ray{AB}| & $\arc{AB},\seg{AB},\ray{AB}$ \\
+  \bottomrule
+\end{tabular}
+\end{center}
+\end{fullwidth}
+
+\begin{notation}
+Here $\NN=\{0,1,2,\ldots\}$. The macro \verb|\NN| only prints a symbol;
+you must state whether your own convention includes zero.
+\end{notation}
+
+\section{Project-specific notation}
+The file \texttt{macros/macros.tex} defines two additional commands used
+only in this book. The command \verb|\angles{v,w}| prints
+$\angles{v,w}$, and \verb|\dd| prints an upright differential, as in
+$\int_0^1 x\,\dd x$.
+
+Define extra commands in that file with \verb|\newcommand|. If a name is
+already defined, choose a more specific name instead of silently replacing
+an existing command. In particular, \texttt{macro.sty} already changes the
+meanings of \verb|\AA|, \verb|\th|, \verb|\Re|, and \verb|\Im|.
+
+\clearpage
+\section{A writing checklist}
+Before sharing a chapter:
+\begin{enumerate}[label=\arabic*.]
+  \item State the domain of each variable and any conventions you use.
+  \item Give definitions before using their terminology in results.
+  \item Label equations, theorems, figures, and tables that you reference.
+  \item Give figures informative captions and cite external sources.
+  \item Build the whole book to resolve references between chapters.
+  \item Check the log for missing citations and undefined references, then
+        inspect the final PDF for layout problems.
+\end{enumerate}
+
+\begin{note}
+A chapter compiled on its own has its own counters and auxiliary files.
+Use the complete book when checking final chapter numbers, cross-references,
+the table of contents, and the bibliography.
+\end{note}
+\end{document}

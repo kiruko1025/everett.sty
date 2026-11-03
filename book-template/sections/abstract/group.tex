@@ -1,35 +1,112 @@
-\documentclass[main]{subfiles} % unified path, drop .tex
-%this inherits the preamble from main_file
+\documentclass[../../main.tex]{subfiles}
 \begin{document}
-\chapter{Group}
-\section{1}
+\chapter{Groups and homomorphisms}
+\label{ch:groups}
 
-\begin{theorem}[theorem name]
-    \lipsum[1]
+\begin{objectives}
+\begin{itemize}
+  \item Recognize the group axioms.
+  \item Use cancellation in a proof.
+  \item Describe a homomorphism and its kernel.
+\end{itemize}
+\end{objectives}
+
+\section{The group axioms}
+The following examples illustrate how to write a sequence of definitions,
+results, and proofs. For a fuller treatment, see \textcite{judson2020}.
+\sidenote{A definition specifies the assumptions available in every later
+proof. Keep track of which axiom justifies each step.}
+
+\begin{definition}[Group]\label{def:group}
+A \vocab{group} is a set $G$ with a binary operation $G\times G\to G$
+that is associative, has an identity $e$, and gives every $g\in G$ an
+inverse $g\inv$. A group is \vocab{abelian} if $gh=hg$ for all $g,h\in G$.
+\end{definition}
+
+\begin{eg}
+The integers $\ZZ$ form an abelian group under addition. The identity is
+$0$, and the inverse of $n$ is $-n$. The nonzero real numbers form a group
+under multiplication, but all real numbers do not: $0$ has no inverse.
+\end{eg}
+
+\begin{lemma}[Cancellation]\label{lem:cancellation}
+If $a,b,c\in G$ and $ab=ac$, then $b=c$.
+\end{lemma}
+\begin{proof}
+Multiply both sides on the left by $a\inv$ and use associativity:
+\[
+\begin{aligned}
+  b&=(a\inv a)b=a\inv(ab)\\
+   &=a\inv(ac)=(a\inv a)c=c.
+\end{aligned}
+\]
+\end{proof}
+
+\begin{bigidea}[Undo an operation]\label{idea:cancellation}
+An inverse lets us undo multiplication on the same side. Cancellation is
+therefore a consequence of the group axioms, even when multiplication is
+not commutative.
+\end{bigidea}
+
+\begin{theorem}[Uniqueness of inverses]\label{thm:unique-inverse}
+Every element of a group has exactly one inverse.
 \end{theorem}
 \begin{proof}
-    \lipsum[2]
+Existence is part of \cref{def:group}. If $b$ and $c$ are inverses of $a$,
+then $ab=e=ac$, so \cref{lem:cancellation} gives $b=c$.
 \end{proof}
 
-\begin{definition}
-    \lipsum[1]
-\end{definition}
-\begin{eg}
-    \lipsum[2]
-\end{eg}
-\begin{explanation}
-    \lipsum[1]
-\end{explanation}
+\begin{corollary}
+For every $a\in G$, we have $(a\inv)\inv=a$.
+\end{corollary}
 
-\begin{prop}
-    asb    
+\section{Maps between groups}
+\begin{definition}[Homomorphism]\label{def:homomorphism}
+A map $f:G\to H$ is a \vocab{homomorphism} if
+$f(xy)=f(x)f(y)$ for all $x,y\in G$. Its kernel is
+\[
+  \Ker f\defeq\{g\in G:f(g)=e_H\}.
+\]
+The set of homomorphisms from $G$ to $H$ is denoted by $\Hom(G,H)$.
+\end{definition}
+
+\begin{prop}\label{prop:identity-map}
+A homomorphism $f:G\to H$ sends the identity of $G$ to the identity of $H$.
 \end{prop}
 \begin{proof}
-    aaa
+Since $f(e_G)=f(e_Ge_G)=f(e_G)f(e_G)$, cancellation in $H$ gives
+$e_H=f(e_G)$.
 \end{proof}
-\section{2}
 
-\section{3}
+\begin{explanation}
+For the reduction map $\pi:\ZZ\to\Zc{n}$, addition is preserved:
+$\pi(a+b)=\pi(a)+\pi(b)$. Its kernel is $n\ZZ$. The notation
+$\Zc{n}$ is produced by \verb|\Zc{n}| from \texttt{macro.sty}.
+Here $n$ is a positive integer.
+\end{explanation}
 
-\lipsum[3-5]
+\begin{remark}
+For a general group, a subgroup must be normal before a quotient group is
+defined. The command \verb|\normalin| prints the normal-subgroup symbol:
+$N\normalin G$.
+\end{remark}
+
+\section{Exercises}
+\begin{problem}[Identity]
+Show that the identity element of a group is unique.
+\end{problem}
+\begin{soln}
+If $e$ and $e'$ are both identity elements, then $e=ee'=e'$.
+\end{soln}
+
+\begin{exercise}[Inverses of products]\label{ex:product-inverse}
+Prove that $(ab)\inv=b\inv a\inv$. Check both products with $ab$.
+\end{exercise}
+
+\begin{recap}
+The group axioms give cancellation and uniqueness of inverses.
+Homomorphisms preserve the operation and the identity; their kernels
+record which elements map to the identity. In \cref{ex:product-inverse},
+the order of the inverse factors matters.
+\end{recap}
 \end{document}

@@ -3,7 +3,10 @@
 % Arguments
 \newif\ifdark\darkfalse
 \DeclareOption{dark}{\darktrue}
-\ProcessOptions\relax
+\DeclareOption{light}{\darkfalse}
+\newif\ifeverettpanbook\everettpanbookfalse
+\DeclareOption{panbook}{\everettpanbooktrue}
+\ProcessOptions*\relax
 
 % Packages
 \usepackage{lmodern}
@@ -25,13 +28,12 @@
 \usepackage{transparent}
 \usepackage{listings}
 \usepackage{graphicx}
-\usepackage{xcolor}
+\usepackage[svgnames,dvipsnames]{xcolor}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{geometry}
 \usepackage{setspace}
 \usepackage{mathrsfs}
-\usepackage[usenames,svgnames,dvipsnames]{xcolor}
 \usepackage{textcomp}
 \usepackage{enumerate}
 \usepackage[textsize=scriptsize,shadow]{todonotes}
@@ -50,41 +52,40 @@
 \usepackage{emptypage}
 \usepackage{subcaption}
 \usepackage{multicol}
-\usepackage[usenames,dvipsnames]{xcolor}
 \usepackage{mathrsfs}
 \usepackage{cancel}
 \usepackage{bm}
 \usepackage{systeme}
 
-% Color Palette
+% Official Catppuccin palettes: https://catppuccin.com/palette/
 \ifdark
-  % -------- Mocha (dark) --------
-  \definecolor{ctpRosewater}{HTML}{F5E0DC}
-  \definecolor{ctpFlamingo}{HTML}{F2CDCD}
-  \definecolor{ctpPink}{HTML}{F5C2E7}
-  \definecolor{ctpMauve}{HTML}{CBA6F7}
-  \definecolor{ctpRed}{HTML}{F38BA8}
-  \definecolor{ctpMaroon}{HTML}{EBA0AC}
-  \definecolor{ctpPeach}{HTML}{FAB387}
-  \definecolor{ctpYellow}{HTML}{F9E2AF}
-  \definecolor{ctpGreen}{HTML}{A6E3A1}
-  \definecolor{ctpTeal}{HTML}{94E2D5}
-  \definecolor{ctpSky}{HTML}{89DCEB}
-  \definecolor{ctpSapphire}{HTML}{74C7EC}
-  \definecolor{ctpBlue}{HTML}{89B4FA}
-  \definecolor{ctpLavender}{HTML}{B4BEFE}
-  \definecolor{ctpText}{HTML}{CDD6F4}
-  \definecolor{ctpSubtext1}{HTML}{BAC2DE}
-  \definecolor{ctpSubtext0}{HTML}{A6ADC8}
-  \definecolor{ctpOverlay2}{HTML}{9399B2}
-  \definecolor{ctpOverlay1}{HTML}{7F849C}
-  \definecolor{ctpOverlay0}{HTML}{6C7086}
-  \definecolor{ctpSurface2}{HTML}{585B70}
-  \definecolor{ctpSurface1}{HTML}{45475A}
-  \definecolor{ctpSurface0}{HTML}{313244}
-  \definecolor{ctpBase}{HTML}{1E1E2E}
-  \definecolor{ctpMantle}{HTML}{181825}
-  \definecolor{ctpCrust}{HTML}{11111B}
+  % -------- Macchiato (dark) --------
+  \definecolor{ctpRosewater}{HTML}{F4DBD6}
+  \definecolor{ctpFlamingo}{HTML}{F0C6C6}
+  \definecolor{ctpPink}{HTML}{F5BDE6}
+  \definecolor{ctpMauve}{HTML}{C6A0F6}
+  \definecolor{ctpRed}{HTML}{ED8796}
+  \definecolor{ctpMaroon}{HTML}{EE99A0}
+  \definecolor{ctpPeach}{HTML}{F5A97F}
+  \definecolor{ctpYellow}{HTML}{EED49F}
+  \definecolor{ctpGreen}{HTML}{A6DA95}
+  \definecolor{ctpTeal}{HTML}{8BD5CA}
+  \definecolor{ctpSky}{HTML}{91D7E3}
+  \definecolor{ctpSapphire}{HTML}{7DC4E4}
+  \definecolor{ctpBlue}{HTML}{8AADF4}
+  \definecolor{ctpLavender}{HTML}{B7BDF8}
+  \definecolor{ctpText}{HTML}{CAD3F5}
+  \definecolor{ctpSubtext1}{HTML}{B8C0E0}
+  \definecolor{ctpSubtext0}{HTML}{A5ADCB}
+  \definecolor{ctpOverlay2}{HTML}{939AB7}
+  \definecolor{ctpOverlay1}{HTML}{8087A2}
+  \definecolor{ctpOverlay0}{HTML}{6E738D}
+  \definecolor{ctpSurface2}{HTML}{5B6078}
+  \definecolor{ctpSurface1}{HTML}{494D64}
+  \definecolor{ctpSurface0}{HTML}{363A4F}
+  \definecolor{ctpBase}{HTML}{24273A}
+  \definecolor{ctpMantle}{HTML}{1E2030}
+  \definecolor{ctpCrust}{HTML}{181926}
   % Semantic mappings
   \colorlet{ctpChapter}{ctpBlue} % chapter / toc accent
   \colorlet{ctpDefinition}{ctpMauve}
@@ -143,6 +144,32 @@
     citecolor=ctpGreen,
     urlcolor=ctpTeal
   }
+\fi
+
+% Both modes include the page and default text, including material that uses
+% \normalcolor (such as headings, captions, and table-of-contents entries).
+\makeatletter
+\AtBeginDocument{%
+  \pagecolor{ctpBase}\color{ctpText}%
+  \global\let\default@color\current@color}
+\makeatother
+
+% The Panbook layout uses the selected Catppuccin flavor throughout.
+\ifeverettpanbook
+  \colorlet{bookInk}{ctpText}
+  \colorlet{bookMuted}{ctpSubtext1}
+  \colorlet{bookBlue}{ctpBlue}
+  \colorlet{bookGold}{ctpYellow}
+  \colorlet{bookPurple}{ctpMauve}
+  \ifdark
+    \colorlet{bookAccent}{ctpPeach}
+    \colorlet{bookGreen}{ctpGreen}
+  \else
+    \colorlet{bookAccent}{ctpMaroon}
+    \colorlet{bookGreen}{ctpTeal}
+    % Latte's yellow needs a darker mix for small theorem/remark headings.
+    \colorlet{bookGold}{ctpYellow!40!ctpText}
+  \fi
 \fi
 
 
@@ -230,6 +257,8 @@
 %%Theorems
 \usepackage{tcolorbox}
 \tcbuselibrary{breakable,skins,hooks}
+\tcbset{colupper=ctpText,collower=ctpText,coltitle=ctpText,
+  colback=ctpBase,colframe=ctpSurface1}
 
 % patch tcolorbox to support continuation of a paragraph
 % after box
@@ -254,94 +283,154 @@
 \makeatother
 \usepackage{thmtools}
 \usepackage[framemethod=TikZ]{mdframed}
-\mdfsetup{skipabove=1em,skipbelow=0em}
+\mdfsetup{skipabove=1em,skipbelow=0em,fontcolor=ctpText,
+  backgroundcolor=ctpBase,linecolor=ctpOverlay1,
+  frametitlefontcolor=ctpText,frametitlebackgroundcolor=ctpSurface0}
 
 
 \theoremstyle{definition}
 
+% Semantic theorem settings keep the existing interface and numbering intact.
+% Macros (rather than frozen color copies) preserve late palette overrides.
+\def\everettDefinitionColor{ctpMauve}
+\def\everettDefinitionFill{ctpMauve!8!ctpBase}
+\def\everettExampleColor{ctpTeal}
+\def\everettExampleFill{ctpTeal!8!ctpBase}
+\def\everettResultColor{ctpMauve}
+\def\everettResultFill{ctpMauve!10!ctpBase}
+\def\everettRemarkColor{ctpYellow}
+\def\everettProofColor{ctpMauve}
+\def\everettProofFill{ctpBase}
+\def\everettExplanationColor{ctpTeal}
+\def\everettExplanationFill{ctpTeal!3!ctpBase}
+\def\everettTheoremRule{2pt}
+\def\everettDefinitionName{definition}
+\def\everettExampleName{example}
+\def\everettPropositionName{proposition}
+\def\everettTheoremName{theorem}
+\def\everettLemmaName{lemma}
+\def\everettCorollaryName{corollary}
+\mdfdefinestyle{everettRemarkFrame}{}
+\mdfdefinestyle{everettProofFrame}{}
+\ifeverettpanbook
+  \def\everettDefinitionColor{bookAccent}
+  \def\everettDefinitionFill{bookAccent!6!ctpBase}
+  \def\everettExampleColor{bookGreen}
+  \def\everettExampleFill{bookGreen!6!ctpBase}
+  \def\everettResultColor{bookBlue}
+  \def\everettResultFill{bookBlue!7!ctpBase}
+  \def\everettRemarkColor{bookGold}
+  \def\everettProofColor{bookInk}
+  \def\everettProofFill{ctpBase}
+  \def\everettExplanationColor{bookGreen}
+  \def\everettExplanationFill{bookGreen!3!ctpBase}
+  \def\everettTheoremRule{3pt}
+  \def\everettDefinitionName{Definition}
+  \def\everettExampleName{Example}
+  \def\everettPropositionName{Proposition}
+  \def\everettTheoremName{Theorem}
+  \def\everettLemmaName{Lemma}
+  \def\everettCorollaryName{Corollary}
+  \mdfdefinestyle{everettRemarkFrame}{backgroundcolor=bookGold!10!ctpBase}
+  \mdfdefinestyle{everettProofFrame}{hidealllines=true,
+    innerleftmargin=0pt,innerrightmargin=0pt}
+  \renewcommand{\qedsymbol}{\ensuremath{\blacksquare}}
+\fi
+
 
 \declaretheoremstyle[
-    headfont=\bfseries\sffamily\color{ctpMauve},
+    headfont=\bfseries\sffamily\color{\everettDefinitionColor},
     bodyfont=\normalfont,
     mdframed={
-        linewidth=2pt,
+        linewidth=\everettTheoremRule,
         rightline=false, topline=false, bottomline=false,
-        linecolor=ctpMauve,
-        backgroundcolor=ctpMauve!8,
+        linecolor=\everettDefinitionColor,
+        backgroundcolor=\everettDefinitionFill,
     }
 ]{thmgreenbox} % definitions
 
 \declaretheoremstyle[
-    headfont=\bfseries\sffamily\color{ctpTeal},
+    headfont=\bfseries\sffamily\color{\everettExampleColor},
     bodyfont=\normalfont,
     mdframed={
-        linewidth=2pt,
+        linewidth=\everettTheoremRule,
         rightline=false, topline=false, bottomline=false,
-        linecolor=ctpTeal,
-        backgroundcolor=ctpTeal!8,
+        linecolor=\everettExampleColor,
+        backgroundcolor=\everettExampleFill,
     }
 ]{thmbluebox} % examples
 
 \declaretheoremstyle[
-    headfont=\bfseries\sffamily\color{ctpYellow},
+    headfont=\bfseries\sffamily\color{\everettRemarkColor},
     bodyfont=\normalfont,
     mdframed={
-        linewidth=2pt,
+        style=everettRemarkFrame,
+        linewidth=\everettTheoremRule,
         rightline=false, topline=false, bottomline=false,
-        linecolor=ctpYellow
+        linecolor=\everettRemarkColor
     }
 ]{thmblueline} % remarks / notes (line only)
 
 \declaretheoremstyle[
-    headfont=\bfseries\sffamily\color{ctpMauve},
+    headfont=\bfseries\sffamily\color{\everettResultColor},
     bodyfont=\normalfont,
     mdframed={
-        linewidth=2pt,
+        linewidth=\everettTheoremRule,
         rightline=false, topline=false, bottomline=false,
-        linecolor=ctpMauve,
-        backgroundcolor=ctpMauve!10,
+        linecolor=\everettResultColor,
+        backgroundcolor=\everettResultFill,
     }
 ]{thmredbox} % theorem / lemma / proposition / corollary
 
 \declaretheoremstyle[
-    headfont=\bfseries\sffamily\color{ctpMauve},
+    headfont=\bfseries\sffamily\color{\everettProofColor},
     bodyfont=\normalfont,
     numbered=no,
     mdframed={
         linewidth=2pt,
         rightline=false, topline=false, bottomline=false,
-        linecolor=ctpMauve,
-        backgroundcolor=ctpMauve!1,
+        linecolor=\everettProofColor,
+        backgroundcolor=\everettProofFill,
+        style=everettProofFrame,
     },
     qed=\qedsymbol
 ]{thmproofbox}
 
 \declaretheoremstyle[
-    headfont=\bfseries\sffamily\color{ctpTeal},
+    headfont=\bfseries\sffamily\color{\everettExplanationColor},
     bodyfont=\normalfont,
     numbered=no,
     mdframed={
         linewidth=2pt,
         rightline=false, topline=false, bottomline=false,
-        linecolor=ctpTeal,
-        backgroundcolor=ctpTeal!1,
+        linecolor=\everettExplanationColor,
+        backgroundcolor=\everettExplanationFill,
     },
 ]{thmexplanationbox} % explanations
 
 
-\declaretheorem[style=thmgreenbox, name=definition]{definition}
-\declaretheorem[style=thmbluebox, numbered=no, name=example]{eg}
-\declaretheorem[style=thmredbox, name=proposition]{prop}
-\declaretheorem[style=thmredbox, name=theorem]{theorem}
-\declaretheorem[style=thmredbox, name=lemma]{lemma}
-\declaretheorem[style=thmredbox, numbered=no, name=corollary]{corollary}
+\declaretheorem[style=thmgreenbox, name=\everettDefinitionName]{definition}
+\declaretheorem[style=thmbluebox, numbered=no, name=\everettExampleName]{eg}
+\declaretheorem[style=thmredbox, name=\everettPropositionName]{prop}
+\declaretheorem[style=thmredbox, name=\everettTheoremName]{theorem}
+\declaretheorem[style=thmredbox, name=\everettLemmaName]{lemma}
+\declaretheorem[style=thmredbox, numbered=no, name=\everettCorollaryName]{corollary}
 
-\declaretheorem[style=thmproofbox, name=proof]{replacementproof}
-\renewenvironment{proof}[1][\proofname]{\vspace{-12pt}\begin{replacementproof}}{\end{replacementproof}}
+% Keep the optional amsthm proof title (also used by macro.sty's soln).
+% thmtools expands the heading when declaring it; keep this name dynamic.
+\protected\def\everettproofname{\proofname}
+\declaretheorem[style=thmproofbox, name=\everettproofname]{replacementproof}
+\renewenvironment{proof}[1][\proofname]{%
+    \renewcommand{\everettproofname}{#1}%
+    \vspace{-12pt}\begin{replacementproof}%
+}{\end{replacementproof}}
 
 
-\declaretheorem[style=thmexplanationbox, name=proof]{tmpexplanation}
-\newenvironment{explanation}[1][]{\vspace{-12pt}\begin{tmpexplanation}}{\end{tmpexplanation}}
+\declaretheorem[style=thmexplanationbox, name=Explanation]{tmpexplanation}
+\newenvironment{explanation}[1][]{%
+    \vspace{-12pt}%
+    \ifstrempty{#1}{\begin{tmpexplanation}}{\begin{tmpexplanation}[#1]}%
+}{\end{tmpexplanation}}
 
 \declaretheorem[style=thmblueline, numbered=no, name=Remark]{remark}
 \declaretheorem[style=thmblueline, numbered=no, name=Note]{note}

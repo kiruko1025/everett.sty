@@ -1,0 +1,95 @@
+\documentclass[../../main.tex]{subfiles}
+\begin{document}
+\chapter{Algorithms and computation}
+\label{ch:computation}
+
+\section{Pseudocode}
+The Euclidean algorithm repeatedly replaces a pair by a smaller pair with
+the same greatest common divisor. It is a useful example of mathematical
+reasoning alongside pseudocode. For broader background on discrete methods,
+see \textcite{concrete1994}.
+
+\begin{algorithm}[htbp]
+  \caption{Euclidean algorithm}
+  \label{alg:euclid}
+  \begin{algorithmic}[1]
+    \Require Integers $a\ge b\ge0$ with $a>0$
+    \Ensure $\gcd(a,b)$
+    \While{$b\ne0$}
+      \State $r\gets a\bmod b$
+      \State $a\gets b$
+      \State $b\gets r$
+    \EndWhile
+    \State \Return $a$
+  \end{algorithmic}
+\end{algorithm}
+
+\begin{prop}\label{prop:gcd-invariant}
+Let $a\ge b>0$ be integers. If $a=qb+r$ with $q\in\ZZ$ and
+$0\le r<b$, then $\gcd(a,b)=\gcd(b,r)$.
+\end{prop}
+\begin{proof}
+A positive integer divides both $a$ and $b$ if and only if it divides both
+$b$ and $r=a-qb$. Thus the two pairs have the same common positive divisors
+and the same greatest common divisor.
+\end{proof}
+
+Each iteration of \cref{alg:euclid} preserves the greatest common divisor
+by \cref{prop:gcd-invariant}. The new second entry satisfies $0\le r<b$, so
+the algorithm terminates. At termination, $\gcd(a,0)=a$.
+
+\clearpage
+\section{A matching implementation}
+The \texttt{listings} package typesets source code directly, without an
+external syntax-highlighting program or shell escape. This template defines
+the \texttt{everett-code} style in the preamble.
+
+\begin{lstlisting}[language=Python,caption={Computing a greatest common divisor},label={lst:gcd}]
+def gcd(a, b):
+    """Return gcd(a, b) for nonnegative integers, not both zero."""
+    while b:
+        a, b = b, a % b
+    return a
+
+assert gcd(252, 105) == 21
+assert gcd(17, 0) == 17
+\end{lstlisting}
+
+The simultaneous assignment keeps the old values of \texttt{a} and
+\texttt{b} while computing the new pair. For $(252,105)$, the successive
+pairs are shown across the main column and margin:
+\begin{fullwidth}
+\[
+  (252,105)\taking{}(105,42)\taking{}(42,21)\taking{}(21,0).
+\]
+\end{fullwidth}
+When showing a longer program, store it in its own file and include it with:
+\begin{lstlisting}[language={[LaTeX]TeX}]
+\lstinputlisting[language=Python]{path/to/file.py}
+\end{lstlisting}
+
+\section{Inline lists and short solutions}
+The \texttt{parlist} environment is useful for a compact checklist. For
+example, a proof of an algorithm should establish
+\begin{parlist}
+  \item the preconditions,
+  \item an invariant,
+  \item termination, and
+  \item the postcondition.
+\end{parlist}
+
+\begin{exercise}[An integer pair]\label{ex:gcd-lcm}
+Compute $\gcd(84,30)$ and $\lcm(84,30)$.
+\end{exercise}
+\begin{soln}
+The Euclidean algorithm gives $\gcd(84,30)=6$. Since the inputs are
+positive, their least common multiple is
+$\lcm(84,30)=84\cdot30/6=420$.
+\end{soln}
+
+\begin{recap}
+An algorithm needs both an invariant and a reason to terminate.
+The Euclidean algorithm preserves the common divisors while strictly
+decreasing its nonzero second input. The code mirrors those two ideas.
+\end{recap}
+\end{document}

@@ -1,40 +1,57 @@
-\documentclass[12pt,a4paper,oneside]{scrbook}
+\documentclass[10pt,a4paper,oneside]{scrbook}
+% Load subfiles before the preamble so chapter files inherit the same setup.
+\usepackage{subfiles}
 \input{preamble}
-\usepackage{subfiles} 
-\title{Math} 
+
+% Change these fields for your own notes.
+\title{Mathematical Notes}
+\subtitle{A Panbook-inspired template for mathematical writing}
 \author{Everett}
+\date{\today}
 
 \begin{document}
 \frontmatter
-\maketitle
-\newpage
+\makebooktitle
+
+\addchap{About these notes}
+This small book is both a starting point for mathematical writing and a
+collection of working examples. It includes definitions and proofs, equations,
+diagrams, a plot, an algorithm, source code, exercises, and a bibliography.
+Replace the sample material with your own chapters as the collection grows.
+
+The style package controls the presentation; the separate macro package
+provides mathematical shorthand. Project-specific notation belongs in
+\texttt{macros/macros.tex}. Build instructions and installation details are in
+the repository's \texttt{README.md}.
+
+\begingroup
+\small
 \tableofcontents
+\endgroup
 
 \mainmatter
-\part{Discrete Math}
+\part{Writing mathematical notes}
 \parttoc
-\part{Abstract Algebra}
+\subfile{sections/guide/getting-started.tex}
+
+\part{Algebra}
 \parttoc
 \subfile{sections/abstract/group.tex}
 \subfile{sections/abstract/ring.tex}
-\part{Linear Algebra}
-\parttoc
-\part{Calculus}
-\parttoc
-\part{Real Analysis}
-\parttoc
-\part{Complex Analysis}
-\parttoc
-\part{Probability}
-\parttoc
-\part{Set Theory}
-\parttoc
-\part{Category Theory}
-\parttoc
-\part{Representation Theory}
-\parttoc
-\part{Topology}
-\parttoc
-\backmatter
 
+\part{Analysis and computation}
+\parttoc
+\subfile{sections/analysis/calculus.tex}
+\subfile{sections/technical/examples.tex}
+
+% End the final part's mini-contents before the appendices and references.
+\addtocontents{toc}{\protect\partend}
+\appendix
+\subfile{sections/appendix/notation.tex}
+
+\backmatter
+% Only cited entries appear. Use \nocite{some-key} to include an uncited item.
+% Both files are registered by everett.sty; do not add them a second time.
+\printbibliography[heading=bibintoc,title={References},notkeyword=image]
+\printbibliography[heading=bibintoc,title={Figure credits},keyword=image]
 \end{document}

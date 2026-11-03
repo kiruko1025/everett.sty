@@ -1,6 +1,17 @@
 \ProvidesPackage{macro}
 \ProcessOptions\relax
 
+% Load the dependencies used by the shortcuts, including when macro is used
+% on its own in an article rather than together with everett.
+\RequirePackage{mathtools,amssymb,amsthm,mathrsfs}
+\RequirePackage{xcolor,hyperref,enumitem}
+% yhmath supplies \wideparen for \arc. Keep the document's existing accents.
+\let\macroSavedWidehat\widehat
+\let\macroSavedWidetilde\widetilde
+\RequirePackage[minimal]{yhmath}
+\let\widehat\macroSavedWidehat
+\let\widetilde\macroSavedWidetilde
+
 % Macros
 \newcommand{\cbrt}[1]{\sqrt[3]{#1}}
 \newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
@@ -29,7 +40,8 @@
 
 %Convenient Environments
 \newenvironment{soln}{\begin{proof}[Solution]}{\end{proof}}
-\newenvironment{parlist}{\begin{inparaenum}[(i)]}{\end{inparaenum}}
+\newlist{parlist}{enumerate*}{1}
+\setlist[parlist]{label=(\roman*)}
 \newenvironment{gobble}{\setbox\z@\vbox\bgroup}{\egroup}
 
 %Inequalities

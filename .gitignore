@@ -1,0 +1,23 @@
+# LaTeX build directories (the legacy tracked out/ files are unchanged).
+**/build/
+**/out/
+
+# Auxiliary files from direct/manual builds.
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.lof
+*.lot
+*.loa
+*.lol
+*.maf
+*.mtc*
+*.ptc*
+*.out
+*.run.xml
+*.synctex.gz
+*.toc

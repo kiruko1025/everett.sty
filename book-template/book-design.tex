@@ -1,0 +1,168 @@
+% Panbook-inspired book design, layered on KOMA-Script and everett.sty.
+% Keep this file with the template when copying it to a new project.
+\usepackage{mathpazo}
+\usepackage{tgpagella}
+\usepackage[scale=0.92]{tgheros}
+\usepackage[scaled=0.95]{inconsolata}
+\usepackage{ragged2e}
+\usepackage[oneside]{sidenotes}
+\usepackage{marginfix}
+
+% A4: 21 mm left + 112 mm text + 9 mm gap + 53 mm notes + 15 mm right.
+\geometry{a4paper,left=21mm,textwidth=112mm,top=24mm,bottom=24mm,
+  marginparsep=9mm,marginparwidth=53mm,
+  headheight=18pt,headsep=8mm,footskip=12mm}
+\normalmarginpar
+\setlength{\marginparpush}{10pt}
+\setstretch{1.15}
+\setlength{\RaggedRightParindent}{1em}
+\AtBeginDocument{\RaggedRight\color{bookInk}}
+\setlength{\emergencystretch}{2em}
+\setlist{topsep=5pt,itemsep=2pt,parsep=0pt,leftmargin=*}
+% Framed theorems restore paragraph settings internally; restore ragged text
+% there too, and leave enough room for a heading plus its first few lines.
+\mdfsetup{startinnercode={\RaggedRight\setlength{\parindent}{0pt}},
+  needspace=5\baselineskip}
+\widowpenalty=10000
+\clubpenalty=10000
+
+\hypersetup{linkcolor=bookPurple,citecolor=bookGreen,urlcolor=bookAccent}
+\renewcommand{\vocab}[1]{\textbf{\color{bookAccent}#1}}
+
+% Running heads extend over the note column; chapter openings stay quiet.
+\KOMAoptions{headsepline=false,headwidth=textwithmarginpar,
+  footwidth=textwithmarginpar}
+\clearpairofpagestyles
+\automark[chapter]{chapter}
+\ihead{\headmark}
+\ohead{\pagemark}
+\ofoot[\pagemark]{}
+\setkomafont{pageheadfoot}{\normalfont\sffamily\footnotesize\color{bookMuted}}
+\setkomafont{pagenumber}{\normalfont\sffamily\footnotesize\color{bookMuted}}
+\renewcommand*{\chaptermarkformat}{\thechapter\enskip}
+
+% Panbook's typography uses the selected Catppuccin palette throughout.
+\setkomafont{disposition}{\normalfont\sffamily\bfseries\color{bookInk}}
+\setkomafont{chapter}{\normalfont\rmfamily\itshape\huge\color{bookInk}}
+\setkomafont{section}{\normalfont\sffamily\bfseries\large\color{bookAccent}}
+\setkomafont{subsection}{\normalfont\sffamily\bfseries\normalsize\color{bookInk}}
+\setkomafont{subsubsection}{\normalfont\sffamily\bfseries\itshape\normalsize}
+\setkomafont{part}{\normalfont\sffamily\bfseries\Huge\color{bookAccent}}
+\setkomafont{partnumber}{\normalfont\sffamily\large\color{bookMuted}}
+\RedeclareSectionCommand[beforeskip=16pt,afterskip=24pt]{chapter}
+\RedeclareSectionCommand[beforeskip=20pt,afterskip=8pt]{section}
+\RedeclareSectionCommand[beforeskip=14pt,afterskip=5pt]{subsection}
+% A section may start with a framed theorem, which reserves its own space.
+% Reserve both together to avoid leaving a heading alone at the page foot.
+\AddToHook{cmd/section/before}{\Needspace{10\baselineskip}}
+\renewcommand*{\chapterformat}{\textcolor{bookAccent}{\thechapter}}
+\renewcommand*{\sectionformat}{\thesection\enskip}
+\renewcommand*{\subsectionformat}{\thesubsection\enskip}
+\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+\renewcommand*{\chapterlinesformat}[3]{%
+  \makebox[\linewidth][l]{%
+    \parbox[t]{\dimexpr\textwidth+\marginparsep+\marginparwidth\relax}{%
+      \raggedright\ifstrempty{#2}{}{#2\par\vspace{8pt}}#3}}}
+\makeatletter
+\renewcommand*{\sectionlinesformat}[4]{%
+  \ifstrequal{#1}{section}
+    {\@hangfrom{\hskip #2#3}{\MakeUppercase{#4}}}
+    {\@hangfrom{\hskip #2#3}{#4}}}
+\makeatother
+\renewcommand*{\partformat}{\partname\enskip\thepart}
+\renewcommand*{\partheadstartvskip}{\vspace*{32mm}}
+\renewcommand*{\beforeparttoc}{\par\bigskip\noindent
+  {\sffamily\bfseries\color{bookMuted}In this part}\par\smallskip}
+
+% Text and starred floats can use both columns. Keep margin notes out of
+% fullwidth passages so that the two do not occupy the same space.
+\newenvironment{fullwidth}
+  {\begin{adjustwidth}{0pt}{-\dimexpr\marginparwidth+\marginparsep\relax}}
+  {\end{adjustwidth}}
+
+% Both floating sidenotes and explicitly positioned margin notes use this face.
+\newcommand{\bookmarginfont}{\normalfont\footnotesize\sffamily
+  \color{bookMuted}\setstretch{1.08}\RaggedRight\setlength{\parindent}{0pt}}
+\makeatletter
+\appto\@marginparreset{\bookmarginfont}
+\makeatother
+\renewcommand*{\marginfont}{\bookmarginfont}
+\captionsetup{font={small},labelfont={sf,bf},textfont=normalfont,
+  justification=RaggedRight,singlelinecheck=false}
+
+% Drawings need explicit theme colors: PGF otherwise defaults to black.
+\tikzcdset{every diagram/.append style={color=bookInk},
+  arrows={color=bookInk},labels={text=bookInk},background color=ctpBase}
+\pgfplotsset{every axis/.append style={
+  axis line style={draw=bookMuted},tick style={draw=bookMuted},
+  tick label style={color=bookInk},label style={color=bookInk},
+  legend style={fill=ctpMantle,draw=ctpSurface1,text=bookInk},
+  grid style={draw=ctpSurface0}}}
+
+% Learning objectives float in the margin and share its collision handling.
+\newsavebox{\bookobjectivesbox}
+\newenvironment{objectives}{%
+  \begin{lrbox}{\bookobjectivesbox}\begin{minipage}{\marginparwidth}
+  \begin{tcolorbox}[enhanced,boxrule=0pt,arc=1mm,
+    colback=bookPurple!10!ctpBase,colbacktitle=bookPurple,
+    colupper=bookInk,coltitle=ctpBase,colframe=ctpSurface1,
+    fonttitle=\sffamily\bfseries\footnotesize,title={Learning objectives},
+    fontupper=\footnotesize\sffamily,left=3mm,right=3mm,top=2mm,bottom=2mm]
+  \RaggedRight\setstretch{1.08}
+}{%
+  \end{tcolorbox}\end{minipage}\end{lrbox}%
+  \marginpar{\usebox{\bookobjectivesbox}}}
+
+\newcounter{bigidea}[chapter]
+\renewcommand{\thebigidea}{\thechapter.\arabic{bigidea}}
+\providecommand{\theHbigidea}{}
+\renewcommand{\theHbigidea}{\theHchapter.\arabic{bigidea}}
+% Prepare the title's number without placing an anchor outside the box.
+% The before-upper hook runs once and puts the reference in the box's content,
+% so both ordinary body labels and links survive page breaks correctly.
+\newenvironment{bigidea}[1][]{%
+  \stepcounter{bigidea}%
+  \begin{tcolorbox}[enhanced,breakable,boxrule=0pt,arc=1mm,
+    colback=bookGold!10!ctpBase,coltitle=bookInk,colupper=bookInk,
+    colbacktitle=bookGold!22!ctpBase,colframe=ctpSurface1,
+    fonttitle=\sffamily\bfseries,
+    before upper={\addtocounter{bigidea}{-1}\refstepcounter{bigidea}\RaggedRight},
+    title={Big Idea \thebigidea\ifstrempty{#1}{}{ --- #1}},
+    code={\ifstrempty{#1}{\tcbset{nameref={Big Idea}}}{\tcbset{nameref={#1}}}},
+    left=3mm,right=3mm,top=2mm,bottom=2mm,before skip=12pt,after skip=12pt]
+}{\end{tcolorbox}}
+\crefname{bigidea}{big idea}{big ideas}
+\Crefname{bigidea}{Big Idea}{Big Ideas}
+
+\newtcolorbox{recap}{enhanced,breakable,boxrule=0pt,arc=0pt,
+  colback=bookBlue!8!ctpBase,colbacktitle=bookBlue!18!ctpBase,
+  coltitle=bookInk,colupper=bookInk,colframe=ctpSurface1,
+  fonttitle=\sffamily\bfseries,title={Chapter recap},
+  before upper={\RaggedRight},
+  left=3mm,right=3mm,top=2mm,bottom=2mm,before skip=12pt,after skip=12pt}
+\declaretheoremstyle[headfont=\sffamily\bfseries\color{bookAccent},
+  bodyfont=\normalfont,spaceabove=10pt,spacebelow=6pt]{bookexercise}
+\declaretheorem[style=bookexercise,name=Exercise,numberwithin=chapter]{exercise}
+\renewcommand{\theHexercise}{\theHchapter.\arabic{exercise}}
+\crefname{exercise}{exercise}{exercises}
+\Crefname{exercise}{Exercise}{Exercises}
+
+% A restrained title page with the same full-width measure as chapter titles.
+\makeatletter
+\newcommand{\makebooktitle}{%
+  \begin{titlepage}\begin{fullwidth}
+    \vspace*{20mm}
+    {\color{bookAccent}\rule{18mm}{2pt}}\par\vspace{12mm}
+    {\sffamily\small\color{bookMuted}ALGEBRA\enskip /\enskip
+      ANALYSIS\enskip /\enskip COMPUTATION\par}
+    \vspace{9mm}
+    {\rmfamily\fontsize{40}{46}\selectfont\@title\par}
+    \vspace{8mm}
+    {\sffamily\large\color{bookMuted}\@subtitle\par}
+    \vspace{22mm}
+    {\sffamily\large\@author\par}
+    \vfill
+    {\sffamily\small\color{bookMuted}\@date\par}
+    \vspace{8mm}
+  \end{fullwidth}\end{titlepage}}
+\makeatother

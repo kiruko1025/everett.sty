@@ -1,5 +1,72 @@
-\documentclass[main]{subfiles} % fix relative path to main
+\documentclass[../../main.tex]{subfiles}
 \begin{document}
-\chapter{Ring}
+\chapter{Rings and quotient maps}
+\label{ch:rings}
 
+\section{Rings with identity}
+\begin{definition}[Ring]\label{def:ring}
+A ring $R$ is an abelian group under addition, together with an associative
+multiplication that distributes over addition on both sides. In these notes,
+rings have an identity $1$, and ring homomorphisms preserve it. The zero ring
+is allowed, so the definition does not require $1\ne0$.
+\end{definition}
+
+\begin{eg}
+The rings $\ZZ$, $\QQ$, $\RR$, and $\CC$ are commutative.
+The ring of $2\times2$ real matrices is not commutative.
+\end{eg}
+
+\begin{prop}\label{prop:ring-zero}
+For every $r\in R$, we have $r0=0r=0$.
+\end{prop}
+\begin{proof}
+Distributivity gives $r0=r(0+0)=r0+r0$. Adding the additive inverse of
+$r0$ to both sides yields $r0=0$. The other equality follows in the same way.
+\end{proof}
+
+\begin{note}
+State conventions about identities and the zero ring explicitly;
+they vary between authors.
+\end{note}
+
+\section{A commutative diagram}
+Let $n\ge2$. The quotient homomorphism $\pi:\ZZ\to\Zc{n}$ sends an integer
+to its residue class. The inclusion $\iota:n\ZZ\injto\ZZ$ has image equal
+to $\Ker\pi$, and $\pi\circ\iota$ is the zero map.
+\begin{marginfigure}
+\centering
+\begin{tikzcd}[column sep=normal,row sep=normal]
+  n\ZZ \arrow[r,hook,"\iota"] \arrow[dr,"0"']
+    & \ZZ \arrow[d,two heads,"\pi"] \\
+    & \Zc{n}
+\end{tikzcd}
+\caption{The quotient map sends every multiple of $n$ to zero.}
+\label{fig:quotient-map}
+\end{marginfigure}
+\Cref{fig:quotient-map} uses \texttt{tikz-cd}, without an external image.
+For more on quotient constructions, see \textcite{judson2020}.
+
+\section{A small multiplication table}
+\begin{table}[htbp]
+  \centering
+  \caption{Multiplication in $\Zc{3}$. Entries are residue-class representatives.}
+  \label{tab:mod-three}
+  \begin{tabular}{c@{\qquad}ccc}
+    \toprule
+    $\cdot$ & $0$ & $1$ & $2$ \\
+    \midrule
+    $0$ & $0$ & $0$ & $0$ \\
+    $1$ & $0$ & $1$ & $2$ \\
+    $2$ & $0$ & $2$ & $1$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+In \cref{tab:mod-three}, both nonzero elements have multiplicative inverses.
+Thus $\Zc{3}$ is a field. In contrast, $\Zc{4}$ is not a field because
+$2\cdot2=0$ there.
+
+\begin{problem}
+List the units of $\Zc{8}$. The macro \verb|\Zm{8}| denotes its unit group,
+$\Zm{8}$.
+\end{problem}
 \end{document}
