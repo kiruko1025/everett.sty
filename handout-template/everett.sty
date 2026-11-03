@@ -1,0 +1,547 @@
+\ProvidesPackage{everett}
+
+% Arguments
+\newif\ifdark\darkfalse
+\DeclareOption{dark}{\darktrue}
+\DeclareOption{light}{\darkfalse}
+\newif\ifeverettpanbook\everettpanbookfalse
+\DeclareOption{panbook}{\everettpanbooktrue}
+% Article-style handouts use sections rather than chapters or part contents.
+\newif\ifeveretthandout\everetthandoutfalse
+\DeclareOption{handout}{\everetthandouttrue}
+\ProcessOptions*\relax
+
+% Packages
+\usepackage{lmodern}
+\usepackage[pdfusetitle]{hyperref}
+\ExplSyntaxOn
+\sys_if_engine_luatex:T {
+	\usepackage{luatex85}
+}
+\sys_if_engine_pdftex:T {
+	\usepackage[T1]{fontenc}
+}
+\ExplSyntaxOff
+
+\usepackage{amsmath, amsfonts, mathtools, amsthm, amssymb}
+\usepackage{textcomp}
+\usepackage{import}
+\usepackage{xifthen}
+% Load color names before pdfpages/eso-pic can load xcolor implicitly.
+\usepackage[svgnames,dvipsnames]{xcolor}
+\usepackage{pdfpages}
+\usepackage{transparent}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{mathrsfs}
+\usepackage{textcomp}
+\usepackage{enumerate}
+\usepackage[textsize=scriptsize,shadow]{todonotes}
+\usepackage{microtype}
+\usepackage[normalem]{ulem}
+\usepackage{stmaryrd}
+\usepackage{wasysym}
+\usepackage{multirow}
+\usepackage{prerex}
+\usepackage[nameinlink]{cleveref}
+\usepackage{derivative}
+\usepackage{url}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\ifeveretthandout\else
+  \usepackage{emptypage}
+\fi
+\usepackage{subcaption}
+\usepackage{multicol}
+\usepackage{mathrsfs}
+\usepackage{cancel}
+\usepackage{bm}
+\usepackage{systeme}
+
+% Official Catppuccin palettes: https://catppuccin.com/palette/
+\ifdark
+  % -------- Macchiato (dark) --------
+  \definecolor{ctpRosewater}{HTML}{F4DBD6}
+  \definecolor{ctpFlamingo}{HTML}{F0C6C6}
+  \definecolor{ctpPink}{HTML}{F5BDE6}
+  \definecolor{ctpMauve}{HTML}{C6A0F6}
+  \definecolor{ctpRed}{HTML}{ED8796}
+  \definecolor{ctpMaroon}{HTML}{EE99A0}
+  \definecolor{ctpPeach}{HTML}{F5A97F}
+  \definecolor{ctpYellow}{HTML}{EED49F}
+  \definecolor{ctpGreen}{HTML}{A6DA95}
+  \definecolor{ctpTeal}{HTML}{8BD5CA}
+  \definecolor{ctpSky}{HTML}{91D7E3}
+  \definecolor{ctpSapphire}{HTML}{7DC4E4}
+  \definecolor{ctpBlue}{HTML}{8AADF4}
+  \definecolor{ctpLavender}{HTML}{B7BDF8}
+  \definecolor{ctpText}{HTML}{CAD3F5}
+  \definecolor{ctpSubtext1}{HTML}{B8C0E0}
+  \definecolor{ctpSubtext0}{HTML}{A5ADCB}
+  \definecolor{ctpOverlay2}{HTML}{939AB7}
+  \definecolor{ctpOverlay1}{HTML}{8087A2}
+  \definecolor{ctpOverlay0}{HTML}{6E738D}
+  \definecolor{ctpSurface2}{HTML}{5B6078}
+  \definecolor{ctpSurface1}{HTML}{494D64}
+  \definecolor{ctpSurface0}{HTML}{363A4F}
+  \definecolor{ctpBase}{HTML}{24273A}
+  \definecolor{ctpMantle}{HTML}{1E2030}
+  \definecolor{ctpCrust}{HTML}{181926}
+  % Semantic mappings
+  \colorlet{ctpChapter}{ctpBlue} % chapter / toc accent
+  \colorlet{ctpDefinition}{ctpMauve}
+  \colorlet{ctpExample}{ctpTeal}
+  \colorlet{ctpTheorem}{ctpMauve}
+  \colorlet{ctpRemark}{ctpYellow}
+  \colorlet{ctpProof}{ctpRed}
+  \colorlet{ctpExplanation}{ctpTeal}
+  % Hyperref colors (so they are readable on dark background)
+  \hypersetup{
+    colorlinks,
+    linkcolor=ctpPeach,
+    citecolor=ctpGreen,
+    urlcolor=ctpSky
+  }
+\else
+  % -------- Frappe accents on pure white (light) --------
+  \definecolor{ctpRosewater}{HTML}{F2D5CF}
+  \definecolor{ctpFlamingo}{HTML}{EEBEBE}
+  \definecolor{ctpPink}{HTML}{F4B8E4}
+  \definecolor{ctpMauve}{HTML}{CA9EE6}
+  \definecolor{ctpRed}{HTML}{E78284}
+  \definecolor{ctpMaroon}{HTML}{EA999C}
+  \definecolor{ctpPeach}{HTML}{EF9F76}
+  \definecolor{ctpYellow}{HTML}{E5C890}
+  \definecolor{ctpGreen}{HTML}{A6D189}
+  \definecolor{ctpTeal}{HTML}{81C8BE}
+  \definecolor{ctpSky}{HTML}{99D1DB}
+  \definecolor{ctpSapphire}{HTML}{85C1DC}
+  \definecolor{ctpBlue}{HTML}{8CAAEE}
+  \definecolor{ctpLavender}{HTML}{BABBF1}
+  % Reverse Frappe's neutral roles for readable ink and rules on white.
+  \definecolor{ctpText}{HTML}{303446}
+  \definecolor{ctpSubtext1}{HTML}{414559}
+  \definecolor{ctpSubtext0}{HTML}{51576D}
+  \definecolor{ctpOverlay2}{HTML}{626880}
+  \definecolor{ctpOverlay1}{HTML}{737994}
+  \definecolor{ctpOverlay0}{HTML}{838BA7}
+  \definecolor{ctpSurface2}{HTML}{949CBB}
+  \definecolor{ctpSurface1}{HTML}{A5ADCE}
+  \definecolor{ctpSurface0}{HTML}{B5BFE2}
+  \definecolor{ctpBase}{HTML}{FFFFFF}
+  % Pale Frappe neutral tints keep code and secondary surfaces light.
+  \definecolor{ctpLightNeutral}{HTML}{C6D0F5}
+  \colorlet{ctpMantle}{ctpLightNeutral!25!ctpBase}
+  \colorlet{ctpCrust}{ctpLightNeutral!40!ctpBase}
+  % Semantic mappings
+  \colorlet{ctpChapter}{ctpLavender}
+  \colorlet{ctpDefinition}{ctpMauve}
+  \colorlet{ctpExample}{ctpTeal}
+  \colorlet{ctpTheorem}{ctpMauve}
+  \colorlet{ctpRemark}{ctpYellow}
+  \colorlet{ctpProof}{ctpRed}
+  \colorlet{ctpExplanation}{ctpTeal}
+  % Hyperref colors follow the Frappe accents.
+  \hypersetup{
+    colorlinks,
+    linkcolor=ctpBlue,
+    citecolor=ctpGreen,
+    urlcolor=ctpTeal
+  }
+\fi
+
+% Both modes include the page and default text, including material that uses
+% \normalcolor (such as headings, captions, and table-of-contents entries).
+\makeatletter
+\AtBeginDocument{%
+  \pagecolor{ctpBase}\color{ctpText}%
+  \global\let\default@color\current@color}
+\makeatother
+
+% The Panbook layout uses the selected Catppuccin flavor throughout.
+\ifeverettpanbook
+  \colorlet{bookInk}{ctpText}
+  \colorlet{bookMuted}{ctpSubtext1}
+  \colorlet{bookBlue}{ctpBlue}
+  \colorlet{bookGold}{ctpYellow}
+  \colorlet{bookPurple}{ctpMauve}
+  \ifdark
+    \colorlet{bookAccent}{ctpPeach}
+    \colorlet{bookGreen}{ctpGreen}
+  \else
+    \colorlet{bookAccent}{ctpMaroon}
+    \colorlet{bookGreen}{ctpTeal}
+    % Darken the pastel yellow for small theorem/remark headings on white.
+    \colorlet{bookGold}{ctpYellow!40!ctpText}
+  \fi
+\fi
+
+
+% tikz
+\usepackage{tikz}
+\usetikzlibrary{intersections, angles, quotes, calc, positioning}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.13}
+
+
+\tikzset{
+    force/.style={thick, {Circle[length=2pt]}-stealth, shorten <=-1pt}
+}
+
+
+%%Commutative diagrams
+\usepackage{tikz-cd}
+\usetikzlibrary{arrows,arrows.meta}
+\makeatletter
+\pgfdeclarearrow{
+	name=xGlyph,
+	cache=false,
+	bending mode=none,
+	parameters={\tikzcd@glyph@len,\tikzcd@glyph@shorten},
+	setup code={%
+		\pgfarrowssettipend{\tikzcd@glyph@len\advance\pgf@x by\tikzcd@glyph@shorten}},
+	defaults={
+		glyph axis=axis_height,
+		glyph length=+1.55ex,
+		glyph shorten=+-0.1ex},
+	drawing code={%
+		\pgfpathrectangle{\pgfpoint{+0pt}{+-1.5ex}}{\pgfpoint{+\tikzcd@glyph@len}{+3ex}}%
+		\pgfusepathqclip%
+		\pgftransformxshift{+\tikzcd@glyph@len}%
+		\pgftransformyshift{+-\tikzcd@glyph@axis}%
+		\pgftext[right,base]{\tikzcd@glyph}}}
+\makeatother
+\tikzcdset{
+	arrow style=tikz,
+	diagrams={>={Latex}},
+	tikzcd left hook/.tip={xGlyph[glyph math command=supset, swap, glyph axis = 5.7pt]},
+	tikzcd right hook/.tip={xGlyph[glyph math command=supset, glyph axis = 5.7pt]},
+	surjective head arrow /.tip = {tikzcd to[sep=-1.5pt]tikzcd to},
+	surjective head/.style={
+		-surjective head arrow
+	}
+}
+
+%%Page layout
+\usepackage[headsepline]{scrlayer-scrpage}
+\renewcommand{\headfont}{}
+\addtolength{\textheight}{3.14cm}
+\setlength{\footskip}{0.5in}
+\setlength{\headsep}{10pt}
+
+\def\shortdate{\leavevmode\hbox{\the\year-\twodigits\month-\twodigits\day}}
+\def\twodigits#1{\ifnum#1<10 0\fi\the#1}
+\ifeveretthandout
+  \automark[section]{section}
+\else
+  \automark[chapter]{chapter}
+\fi
+
+
+\rohead{\footnotesize\thepage}
+\lehead{\footnotesize\thepage}
+\lohead{\footnotesize \leftmark}
+\chead{}
+\rofoot{}
+\refoot{}
+\lefoot{}
+\lofoot{}
+%\cfoot{\pagemark}
+
+%%section and chapter head
+\renewcommand*{\sectionformat}{\color{ctpChapter}\thesection\autodot\enskip}
+\renewcommand*{\subsectionformat}{\color{ctpChapter}\thesubsection\autodot\enskip}
+\renewcommand{\thesubsection}{\thesection.\roman{subsection}}
+
+\ifeveretthandout\else
+\addtokomafont{chapterprefix}{\raggedleft}
+\RedeclareSectionCommand[beforeskip=0.5em]{chapter}
+\renewcommand*{\chapterformat}{%
+\mbox{\scalebox{1.5}{\chapappifchapterprefix{\nobreakspace}}%
+\scalebox{2.718}{\color{ctpChapter}\thechapter\autodot}\enskip}}
+\fi
+
+\addtokomafont{partprefix}{\rmfamily}
+\renewcommand*{\partformat}{\color{ctpChapter}\scalebox{2.5}{\thepart}}
+
+%%Theorems
+\usepackage{tcolorbox}
+\tcbuselibrary{breakable,skins,hooks}
+\tcbset{colupper=ctpText,collower=ctpText,coltitle=ctpText,
+  colback=ctpBase,colframe=ctpSurface1}
+
+% patch tcolorbox to support continuation of a paragraph
+% after box
+\makeatletter
+\tcbset{
+	after app={%
+		\ifx\tcb@drawcolorbox\tcb@drawcolorbox@breakable
+		\else
+		% add only when not breakabel
+		\@endparenv
+		\fi
+	}
+}
+
+% for breakable
+\appto\tcb@use@after@lastbox{\@endparenv\@doendpe}
+\makeatother
+% END patch tcolorbox for continuation of paragraph
+
+
+% theorems
+\makeatother
+\usepackage{thmtools}
+\usepackage[framemethod=TikZ]{mdframed}
+\mdfsetup{skipabove=1em,skipbelow=0em,fontcolor=ctpText,
+  backgroundcolor=ctpBase,linecolor=ctpOverlay1,
+  frametitlefontcolor=ctpText,frametitlebackgroundcolor=ctpSurface0}
+
+
+\theoremstyle{definition}
+
+% Semantic theorem settings keep the existing interface and numbering intact.
+% Macros (rather than frozen color copies) preserve late palette overrides.
+\def\everettDefinitionColor{ctpMauve}
+\def\everettDefinitionFill{ctpMauve!8!ctpBase}
+\def\everettExampleColor{ctpTeal}
+\def\everettExampleFill{ctpTeal!8!ctpBase}
+\def\everettResultColor{ctpMauve}
+\def\everettResultFill{ctpMauve!10!ctpBase}
+\def\everettRemarkColor{ctpYellow}
+\def\everettProofColor{ctpMauve}
+\def\everettProofFill{ctpBase}
+\def\everettExplanationColor{ctpTeal}
+\def\everettExplanationFill{ctpTeal!3!ctpBase}
+\def\everettTheoremRule{2pt}
+\def\everettDefinitionName{definition}
+\def\everettExampleName{example}
+\def\everettPropositionName{proposition}
+\def\everettTheoremName{theorem}
+\def\everettLemmaName{lemma}
+\def\everettCorollaryName{corollary}
+\mdfdefinestyle{everettRemarkFrame}{}
+\mdfdefinestyle{everettProofFrame}{}
+\ifeverettpanbook
+  \def\everettDefinitionColor{bookAccent}
+  \def\everettDefinitionFill{bookAccent!6!ctpBase}
+  \def\everettExampleColor{bookGreen}
+  \def\everettExampleFill{bookGreen!6!ctpBase}
+  \def\everettResultColor{bookBlue}
+  \def\everettResultFill{bookBlue!7!ctpBase}
+  \def\everettRemarkColor{bookGold}
+  \def\everettProofColor{bookInk}
+  \def\everettProofFill{ctpBase}
+  \def\everettExplanationColor{bookGreen}
+  \def\everettExplanationFill{bookGreen!3!ctpBase}
+  \def\everettTheoremRule{3pt}
+  \def\everettDefinitionName{Definition}
+  \def\everettExampleName{Example}
+  \def\everettPropositionName{Proposition}
+  \def\everettTheoremName{Theorem}
+  \def\everettLemmaName{Lemma}
+  \def\everettCorollaryName{Corollary}
+  \mdfdefinestyle{everettRemarkFrame}{backgroundcolor=bookGold!10!ctpBase}
+  \mdfdefinestyle{everettProofFrame}{hidealllines=true,
+    innerleftmargin=0pt,innerrightmargin=0pt}
+  \renewcommand{\qedsymbol}{\ensuremath{\blacksquare}}
+\fi
+
+
+\declaretheoremstyle[
+    headfont=\bfseries\sffamily\color{\everettDefinitionColor},
+    bodyfont=\normalfont,
+    mdframed={
+        linewidth=\everettTheoremRule,
+        rightline=false, topline=false, bottomline=false,
+        linecolor=\everettDefinitionColor,
+        backgroundcolor=\everettDefinitionFill,
+    }
+]{thmgreenbox} % definitions
+
+\declaretheoremstyle[
+    headfont=\bfseries\sffamily\color{\everettExampleColor},
+    bodyfont=\normalfont,
+    mdframed={
+        linewidth=\everettTheoremRule,
+        rightline=false, topline=false, bottomline=false,
+        linecolor=\everettExampleColor,
+        backgroundcolor=\everettExampleFill,
+    }
+]{thmbluebox} % examples
+
+\declaretheoremstyle[
+    headfont=\bfseries\sffamily\color{\everettRemarkColor},
+    bodyfont=\normalfont,
+    mdframed={
+        style=everettRemarkFrame,
+        linewidth=\everettTheoremRule,
+        rightline=false, topline=false, bottomline=false,
+        linecolor=\everettRemarkColor
+    }
+]{thmblueline} % remarks / notes (line only)
+
+\declaretheoremstyle[
+    headfont=\bfseries\sffamily\color{\everettResultColor},
+    bodyfont=\normalfont,
+    mdframed={
+        linewidth=\everettTheoremRule,
+        rightline=false, topline=false, bottomline=false,
+        linecolor=\everettResultColor,
+        backgroundcolor=\everettResultFill,
+    }
+]{thmredbox} % theorem / lemma / proposition / corollary
+
+\declaretheoremstyle[
+    headfont=\bfseries\sffamily\color{\everettProofColor},
+    bodyfont=\normalfont,
+    numbered=no,
+    mdframed={
+        linewidth=2pt,
+        rightline=false, topline=false, bottomline=false,
+        linecolor=\everettProofColor,
+        backgroundcolor=\everettProofFill,
+        style=everettProofFrame,
+    },
+    qed=\qedsymbol
+]{thmproofbox}
+
+\declaretheoremstyle[
+    headfont=\bfseries\sffamily\color{\everettExplanationColor},
+    bodyfont=\normalfont,
+    numbered=no,
+    mdframed={
+        linewidth=2pt,
+        rightline=false, topline=false, bottomline=false,
+        linecolor=\everettExplanationColor,
+        backgroundcolor=\everettExplanationFill,
+    },
+]{thmexplanationbox} % explanations
+
+
+\declaretheorem[style=thmgreenbox, name=\everettDefinitionName]{definition}
+\declaretheorem[style=thmbluebox, numbered=no, name=\everettExampleName]{eg}
+\declaretheorem[style=thmredbox, name=\everettPropositionName]{prop}
+\declaretheorem[style=thmredbox, name=\everettTheoremName]{theorem}
+\declaretheorem[style=thmredbox, name=\everettLemmaName]{lemma}
+\declaretheorem[style=thmredbox, numbered=no, name=\everettCorollaryName]{corollary}
+
+% Keep the optional amsthm proof title (also used by macro.sty's soln).
+% thmtools expands the heading when declaring it; keep this name dynamic.
+\protected\def\everettproofname{\proofname}
+\declaretheorem[style=thmproofbox, name=\everettproofname]{replacementproof}
+\renewenvironment{proof}[1][\proofname]{%
+    \renewcommand{\everettproofname}{#1}%
+    \vspace{-12pt}\begin{replacementproof}%
+}{\end{replacementproof}}
+
+
+\declaretheorem[style=thmexplanationbox, name=Explanation]{tmpexplanation}
+\newenvironment{explanation}[1][]{%
+    \vspace{-12pt}%
+    \ifstrempty{#1}{\begin{tmpexplanation}}{\begin{tmpexplanation}[#1]}%
+}{\end{tmpexplanation}}
+
+\declaretheorem[style=thmblueline, numbered=no, name=Remark]{remark}
+\declaretheorem[style=thmblueline, numbered=no, name=Note]{note}
+
+\newtheorem*{uovt}{UOVT}
+\newtheorem*{notation}{Notation}
+\newtheorem*{previouslyseen}{As previously seen}
+\newtheorem*{problem}{Problem}
+\newtheorem*{observe}{Observe}
+\newtheorem*{property}{Property}
+\newtheorem*{intuition}{Intuition}
+
+
+\usepackage{etoolbox}
+\AtEndEnvironment{vb}{\null\hfill$\diamond$}%
+\AtEndEnvironment{intermezzo}{\null\hfill$\diamond$}%
+\makeatletter
+
+
+\usepackage{xifthen}
+
+\def\testdateparts#1{\dateparts#1\relax}
+\def\dateparts#1 #2 #3 #4 #5\relax{
+    \marginpar{\small\textsf{\mbox{#1 #2 #3 #5}}}
+}
+
+
+
+%%Table of contents
+% First add ToC to ToC
+\makeatletter
+\usepackage{etoolbox}
+\ifeveretthandout
+\pretocmd{\tableofcontents}{%
+  \clearpage\pdfbookmark[0]{\contentsname}{toc}%
+}{}{}%
+\else
+\pretocmd{\tableofcontents}{%
+\ifbool{@openright}{\cleardoublepage}{\clearpage}%
+	\pdfbookmark[0]{\contentsname}{toc}%
+}{}{}%
+\fi
+\makeatother
+\setcounter{tocdepth}{1}
+\RedeclareSectionCommand[tocnumwidth=4.2em]{part}
+\ifeveretthandout\else
+\RedeclareSectionCommand[tocpagenumberwidth=2.2em,tocnumwidth=4.2em]{chapter}
+\fi
+\RedeclareSectionCommand[tocpagenumberwidth=2.2em,tocnumwidth=2.8em]{section}
+
+
+%%Mini ToC
+\ifeveretthandout\else
+\usepackage[tight]{minitoc}
+\mtcsetfont{parttoc}{chapter}{\sffamily\bfseries}
+\mtcsetfont{parttoc}{section}{\footnotesize\rmfamily\upshape\mdseries}
+\mtcsetfont{parttoc}{subsection}{\footnotesize\rmfamily\upshape\mdseries}
+%\mtcsetdepth{parttoc}{1}
+\setcounter{parttocdepth}{1}
+\renewcommand*{\partheadstartvskip}{\vspace*{20em}}
+\renewcommand*{\partheadendvskip}{}
+%\noptcrule
+\renewcommand\beforeparttoc{\noindent{\bfseries \Large Part \thepart: Contents}}
+%\hspace{\fill}\rule{0.95\linewidth}{2pt}\hspace{\fill}
+\doparttoc[n]
+\fi
+
+%%Bibliography
+\usepackage[backend=biber,backref=true,style=alphabetic]{biblatex}
+\DeclareLabelalphaTemplate{
+	\labelelement{
+		\field[final]{shorthand}
+		\field{label}
+		\field[strwidth=2,strside=left]{labelname}
+	}
+	\labelelement{
+		\field[strwidth=2,strside=right]{year}
+	}
+}
+\DeclareFieldFormat{labelalpha}{\textbf{\scriptsize #1}}
+\addbibresource{references.bib}
+\addbibresource{images.bib}
+%% stylistic biblatex choices
+\DefineBibliographyStrings{english}{%
+	backrefpage  = {cited p.}, % for single page number
+	backrefpages = {cited pp.} % for multiple page numbers
+}
+\DeclareFieldFormat{journaltitle}{\mkbibemph{#1},} % italic journal title with comma
+\DeclareFieldFormat[inbook,thesis]{title}{\mkbibemph{#1}\addperiod} % italic title with period
+\DeclareFieldFormat[article]{title}{#1} % title of journal article is printed as normal text
+\DeclareFieldFormat[article]{volume}{\textbf{#1}\addcolon\space}
+\renewcommand{\mkbibnamegiven}[1]{\textsc{#1}}
+\renewcommand{\mkbibnamefamily}[1]{\textsc{#1}}
+\renewcommand{\mkbibnameprefix}[1]{\textsc{#1}}
+\renewcommand{\mkbibnamesuffix}[1]{\textsc{#1}}
+\renewcommand{\finentrypunct}{}
+
+%% Misc haxx
+\pdfstringdefDisableCommands{\def\Spec{\text{Spec }}\def\sigma{σ}}

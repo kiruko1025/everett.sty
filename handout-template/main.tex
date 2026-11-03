@@ -1,0 +1,162 @@
+\documentclass[10pt,a4paper,oneside]{scrartcl}
+\input{preamble}
+
+% Edit these fields and replace the sample material below.
+\title{Groups and Symmetry}
+\subtitle{A mathematical handout}
+\author{Everett}
+\date{\today}
+\handoutcourse{Abstract Algebra / Handout 01}
+\handoutrunningtitle{Groups and symmetry}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+A short introduction to groups, illustrated by the symmetries of a square.
+We connect the axioms to a concrete picture, prove cancellation, and end
+with exercises. This source also demonstrates the handout's margin notes,
+figures, citations, and full-width material.
+\end{abstract}
+
+\section{From a picture to an operation}
+
+\newthought{Start with a square.} Rotate it through a quarter turn, then
+rotate it again. The result is another symmetry: a half turn.
+The operation is composition, and its inputs and outputs all belong to
+the same collection.\sidenote{Read a composition from right to left:
+$gh$ means apply $h$ first, then $g$. Fix this convention before computing.}
+
+\begin{marginfigure}
+\centering
+\begin{tikzpicture}[scale=0.65, color=ctpText]
+  \draw[thick,ctpBlue,fill=ctpBlue!6!ctpBase] (0,0) rectangle (2,2);
+  \foreach \x/\y/\name in {0/0/D,2/0/C,2/2/B,0/2/A}
+    \fill (\x,\y) circle (2pt) node[shift={({(\x-1)*0.25},{(\y-1)*0.25})}] {$\name$};
+  \draw[-{Latex},ctpTeal,thick] (2.7,0.5) arc[start angle=-35,end angle=70,radius=1];
+  \node at (3.0,1.4) {$r$};
+\end{tikzpicture}
+\caption{A quarter turn $r$ cycles the four vertices. Four quarter turns
+return every vertex to its starting position.}
+\label{fig:square}
+\end{marginfigure}
+
+\begin{definition}[Group]\label{def:group}
+A \vocab{group} is a set $G$ with an associative operation
+$G\times G\to G$, an identity $e$, and an inverse $g\inv$ for each $g\in G$.
+Thus $eg=ge=g$ and $gg\inv=g\inv g=e$.
+\end{definition}
+
+\begin{eg}
+The integers $\ZZ$ form a group under addition. The identity is $0$,
+and the inverse of $n$ is $-n$. The rotations of the square form a group
+$\{e,r,r^2,r^3\}$, with $r^4=e$.
+\end{eg}
+
+\subsection{The order of an operation matters}
+Rotating and reflecting a square need not commute. If $s$ is a reflection,
+then $sr=r\inv s$. A group is \vocab{abelian} when $gh=hg$ for all
+$g,h\in G$. The rotation group is abelian; the full symmetry group is not.
+A standard reference develops these examples further
+\sidecite{judson2020}.
+
+\section{Cancellation comes from inverses}
+
+\begin{theorem}[Left cancellation]\label{thm:cancellation}
+If $a,b,c\in G$ and $ab=ac$, then $b=c$.
+\end{theorem}
+\begin{proof}
+Multiplying on the left by $a\inv$ gives
+\[
+  b=(a\inv a)b=a\inv(ab)=a\inv(ac)=(a\inv a)c=c.
+\]
+Associativity allows us to regroup each product.
+\end{proof}
+
+The argument uses the inverse axiom in \cref{def:group}.
+It never changes the order of the factors, so
+\cref{thm:cancellation} also applies to nonabelian groups.
+
+% A deliberate page break keeps this two-page teaching example easy to edit.
+% Remove it to let a longer handout flow naturally.
+\clearpage
+\section{Read a finite group from its table}
+
+\newthought{A table records every product.} For the rotation group, the
+entry in row $r^i$ and column $r^j$ is $r^{i+j}$, reducing the exponent
+modulo $4$. Each row and each column contains every element exactly once.
+
+\begin{margintable}
+\centering
+\begin{tabular}{c|cccc}
+  \toprule
+  $\cdot$ & $e$ & $r$ & $r^2$ & $r^3$ \\
+  \midrule
+  $e$   & $e$   & $r$   & $r^2$ & $r^3$ \\
+  $r$   & $r$   & $r^2$ & $r^3$ & $e$   \\
+  $r^2$ & $r^2$ & $r^3$ & $e$   & $r$   \\
+  $r^3$ & $r^3$ & $e$   & $r$   & $r^2$ \\
+  \bottomrule
+\end{tabular}
+\caption{The multiplication table of the four rotations.}
+\label{tab:rotations}
+\end{margintable}
+
+\begin{remark}
+A repeated entry in a row would contradict left cancellation.
+Right cancellation gives the corresponding statement for columns.
+\end{remark}
+
+\subsection{A visual summary}
+\Cref{fig:cycle} uses the main text column and the note column together.
+Use \texttt{figure*} or \texttt{table*} for wide floats; use
+\texttt{fullwidth} for a wide passage of text. Keep margin notes away
+from the vertical space occupied by wide content.
+
+\begin{figure*}[htbp]
+\centering
+\begin{tikzpicture}[
+  every node/.style={text=ctpText},
+  state/.style={draw=ctpBlue,fill=ctpBlue!6!ctpBase,
+    rounded corners=2pt,minimum width=23mm,minimum height=12mm},
+  every path/.style={draw=ctpTeal,thick,-{Latex}}
+]
+  \node[state] (e) {$e$};
+  \node[state,right=17mm of e] (r) {$r$};
+  \node[state,right=17mm of r] (rr) {$r^2$};
+  \node[state,right=17mm of rr] (rrr) {$r^3$};
+  \draw (e) -- node[above] {$r$} (r);
+  \draw (r) -- node[above] {$r$} (rr);
+  \draw (rr) -- node[above] {$r$} (rrr);
+  \draw (rrr.south) -- ++(0,-0.55) -| node[pos=0.25,below] {$r$} (e.south);
+\end{tikzpicture}
+\caption{Successive quarter turns visit each rotation and return to the identity.}
+\label{fig:cycle}
+\end{figure*}
+
+\section{Try it yourself}
+\begin{exercise}\label{ex:right}
+Prove right cancellation: if $ba=ca$, then $b=c$.
+Identify exactly where you use associativity.
+\end{exercise}
+
+\begin{exercise}
+Show that every element has a unique inverse. Then find the inverse
+of each rotation in \cref{tab:rotations}.
+\end{exercise}
+
+\begin{exercise}
+Let $s$ reflect the square across its vertical axis. Track a vertex to
+show that $rs\ne sr$.
+\end{exercise}
+
+\begin{fullwidth}
+\small\itshape
+Takeaway: a symmetry is an operation that preserves a structure.
+The group axioms capture composition, doing nothing, and undoing an
+operation. Cancellation follows from these axioms rather than from
+commutativity.
+\end{fullwidth}
+
+\printbibliography[heading=bibintoc,title={Further reading}]
+\end{document}

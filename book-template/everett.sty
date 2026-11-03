@@ -6,6 +6,9 @@
 \DeclareOption{light}{\darkfalse}
 \newif\ifeverettpanbook\everettpanbookfalse
 \DeclareOption{panbook}{\everettpanbooktrue}
+% Article-style handouts use sections rather than chapters or part contents.
+\newif\ifeveretthandout\everetthandoutfalse
+\DeclareOption{handout}{\everetthandouttrue}
 \ProcessOptions*\relax
 
 % Packages
@@ -24,11 +27,12 @@
 \usepackage{textcomp}
 \usepackage{import}
 \usepackage{xifthen}
+% Load color names before pdfpages/eso-pic can load xcolor implicitly.
+\usepackage[svgnames,dvipsnames]{xcolor}
 \usepackage{pdfpages}
 \usepackage{transparent}
 \usepackage{listings}
 \usepackage{graphicx}
-\usepackage[svgnames,dvipsnames]{xcolor}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{geometry}
@@ -49,7 +53,9 @@
 \usepackage{float}
 \usepackage{booktabs}
 \usepackage{enumitem}
-\usepackage{emptypage}
+\ifeveretthandout\else
+  \usepackage{emptypage}
+\fi
 \usepackage{subcaption}
 \usepackage{multicol}
 \usepackage{mathrsfs}
@@ -102,33 +108,36 @@
     urlcolor=ctpSky
   }
 \else
-  % -------- Latte (light) --------
-  \definecolor{ctpRosewater}{HTML}{DC8A78}
-  \definecolor{ctpFlamingo}{HTML}{DD7878}
-  \definecolor{ctpPink}{HTML}{EA76CB}
-  \definecolor{ctpMauve}{HTML}{8839EF}
-  \definecolor{ctpRed}{HTML}{D20F39}
-  \definecolor{ctpMaroon}{HTML}{E64553}
-  \definecolor{ctpPeach}{HTML}{FE640B}
-  \definecolor{ctpYellow}{HTML}{DF8E1D}
-  \definecolor{ctpGreen}{HTML}{40A02B}
-  \definecolor{ctpTeal}{HTML}{179299}
-  \definecolor{ctpSky}{HTML}{04A5E5}
-  \definecolor{ctpSapphire}{HTML}{209FB5}
-  \definecolor{ctpBlue}{HTML}{1E66F5}
-  \definecolor{ctpLavender}{HTML}{7287FD}
-  \definecolor{ctpText}{HTML}{4C4F69}
-  \definecolor{ctpSubtext1}{HTML}{5C5F77}
-  \definecolor{ctpSubtext0}{HTML}{6C6F85}
-  \definecolor{ctpOverlay2}{HTML}{7C7F93}
-  \definecolor{ctpOverlay1}{HTML}{8C8FA1}
-  \definecolor{ctpOverlay0}{HTML}{9CA0B0}
-  \definecolor{ctpSurface2}{HTML}{ACB0BE}
-  \definecolor{ctpSurface1}{HTML}{BCC0CC}
-  \definecolor{ctpSurface0}{HTML}{CCD0DA}
-  \definecolor{ctpBase}{HTML}{EFF1F5}
-  \definecolor{ctpMantle}{HTML}{E6E9EF}
-  \definecolor{ctpCrust}{HTML}{DCE0E8}
+  % -------- Frappe accents on pure white (light) --------
+  \definecolor{ctpRosewater}{HTML}{F2D5CF}
+  \definecolor{ctpFlamingo}{HTML}{EEBEBE}
+  \definecolor{ctpPink}{HTML}{F4B8E4}
+  \definecolor{ctpMauve}{HTML}{CA9EE6}
+  \definecolor{ctpRed}{HTML}{E78284}
+  \definecolor{ctpMaroon}{HTML}{EA999C}
+  \definecolor{ctpPeach}{HTML}{EF9F76}
+  \definecolor{ctpYellow}{HTML}{E5C890}
+  \definecolor{ctpGreen}{HTML}{A6D189}
+  \definecolor{ctpTeal}{HTML}{81C8BE}
+  \definecolor{ctpSky}{HTML}{99D1DB}
+  \definecolor{ctpSapphire}{HTML}{85C1DC}
+  \definecolor{ctpBlue}{HTML}{8CAAEE}
+  \definecolor{ctpLavender}{HTML}{BABBF1}
+  % Reverse Frappe's neutral roles for readable ink and rules on white.
+  \definecolor{ctpText}{HTML}{303446}
+  \definecolor{ctpSubtext1}{HTML}{414559}
+  \definecolor{ctpSubtext0}{HTML}{51576D}
+  \definecolor{ctpOverlay2}{HTML}{626880}
+  \definecolor{ctpOverlay1}{HTML}{737994}
+  \definecolor{ctpOverlay0}{HTML}{838BA7}
+  \definecolor{ctpSurface2}{HTML}{949CBB}
+  \definecolor{ctpSurface1}{HTML}{A5ADCE}
+  \definecolor{ctpSurface0}{HTML}{B5BFE2}
+  \definecolor{ctpBase}{HTML}{FFFFFF}
+  % Pale Frappe neutral tints keep code and secondary surfaces light.
+  \definecolor{ctpLightNeutral}{HTML}{C6D0F5}
+  \colorlet{ctpMantle}{ctpLightNeutral!25!ctpBase}
+  \colorlet{ctpCrust}{ctpLightNeutral!40!ctpBase}
   % Semantic mappings
   \colorlet{ctpChapter}{ctpLavender}
   \colorlet{ctpDefinition}{ctpMauve}
@@ -137,7 +146,7 @@
   \colorlet{ctpRemark}{ctpYellow}
   \colorlet{ctpProof}{ctpRed}
   \colorlet{ctpExplanation}{ctpTeal}
-  % Hyperref colors (darker for light background)
+  % Hyperref colors follow the Frappe accents.
   \hypersetup{
     colorlinks,
     linkcolor=ctpBlue,
@@ -167,7 +176,7 @@
   \else
     \colorlet{bookAccent}{ctpMaroon}
     \colorlet{bookGreen}{ctpTeal}
-    % Latte's yellow needs a darker mix for small theorem/remark headings.
+    % Darken the pastel yellow for small theorem/remark headings on white.
     \colorlet{bookGold}{ctpYellow!40!ctpText}
   \fi
 \fi
@@ -227,7 +236,11 @@
 
 \def\shortdate{\leavevmode\hbox{\the\year-\twodigits\month-\twodigits\day}}
 \def\twodigits#1{\ifnum#1<10 0\fi\the#1}
-\automark[chapter]{chapter}
+\ifeveretthandout
+  \automark[section]{section}
+\else
+  \automark[chapter]{chapter}
+\fi
 
 
 \rohead{\footnotesize\thepage}
@@ -245,11 +258,13 @@
 \renewcommand*{\subsectionformat}{\color{ctpChapter}\thesubsection\autodot\enskip}
 \renewcommand{\thesubsection}{\thesection.\roman{subsection}}
 
+\ifeveretthandout\else
 \addtokomafont{chapterprefix}{\raggedleft}
 \RedeclareSectionCommand[beforeskip=0.5em]{chapter}
 \renewcommand*{\chapterformat}{%
 \mbox{\scalebox{1.5}{\chapappifchapterprefix{\nobreakspace}}%
 \scalebox{2.718}{\color{ctpChapter}\thechapter\autodot}\enskip}}
+\fi
 
 \addtokomafont{partprefix}{\rmfamily}
 \renewcommand*{\partformat}{\color{ctpChapter}\scalebox{2.5}{\thepart}}
@@ -463,18 +478,27 @@
 % First add ToC to ToC
 \makeatletter
 \usepackage{etoolbox}
+\ifeveretthandout
 \pretocmd{\tableofcontents}{%
-	\if@openright\cleardoublepage\else\clearpage\fi
+  \clearpage\pdfbookmark[0]{\contentsname}{toc}%
+}{}{}%
+\else
+\pretocmd{\tableofcontents}{%
+\ifbool{@openright}{\cleardoublepage}{\clearpage}%
 	\pdfbookmark[0]{\contentsname}{toc}%
 }{}{}%
+\fi
 \makeatother
 \setcounter{tocdepth}{1}
 \RedeclareSectionCommand[tocnumwidth=4.2em]{part}
+\ifeveretthandout\else
 \RedeclareSectionCommand[tocpagenumberwidth=2.2em,tocnumwidth=4.2em]{chapter}
+\fi
 \RedeclareSectionCommand[tocpagenumberwidth=2.2em,tocnumwidth=2.8em]{section}
 
 
 %%Mini ToC
+\ifeveretthandout\else
 \usepackage[tight]{minitoc}
 \mtcsetfont{parttoc}{chapter}{\sffamily\bfseries}
 \mtcsetfont{parttoc}{section}{\footnotesize\rmfamily\upshape\mdseries}
@@ -487,6 +511,7 @@
 \renewcommand\beforeparttoc{\noindent{\bfseries \Large Part \thepart: Contents}}
 %\hspace{\fill}\rule{0.95\linewidth}{2pt}\hspace{\fill}
 \doparttoc[n]
+\fi
 
 %%Bibliography
 \usepackage[backend=biber,backref=true,style=alphabetic]{biblatex}

@@ -1,0 +1,124 @@
+% An original Tufte-inspired layout on KOMA-Script and everett.sty.
+% Reference: https://github.com/Tufte-LaTeX/tufte-latex/blob/master/sample-handout.tex
+% Uses the reference's A4 column proportions; no Tufte class is required.
+\usepackage{mathpazo}
+\usepackage{tgpagella}
+\usepackage[scale=0.92]{tgheros}
+\usepackage[scaled=0.95]{inconsolata}
+\usepackage{ragged2e}
+\usepackage[oneside]{sidenotes}
+\usepackage{marginfix}
+% Footnotes are redirected below, so microtype's footnote patch is unnecessary.
+\microtypesetup{nopatch=footnote}
+
+\geometry{a4paper,left=24.8mm,textwidth=107mm,top=27.4mm,bottom=25mm,
+  marginparsep=8.2mm,marginparwidth=49.4mm,
+  headheight=16pt,headsep=8mm,footskip=12mm}
+\normalmarginpar
+\setlength{\marginparpush}{10pt}
+\setstretch{1.08}
+\setlength{\RaggedRightParindent}{1em}
+\setlength{\emergencystretch}{2em}
+\AtBeginDocument{\RaggedRight}
+\setlist{topsep=5pt,itemsep=2pt,parsep=0pt,leftmargin=*}
+\mdfsetup{startinnercode={\RaggedRight\setlength{\parindent}{0pt}},
+  needspace=4\baselineskip}
+\widowpenalty=10000
+\clubpenalty=10000
+
+% Quiet, unnumbered italic headings, as in the sample handout.
+% Set secnumdepth to 2 in preamble.tex if numbered sections are preferred.
+\setcounter{secnumdepth}{-1}
+\setkomafont{disposition}{\normalfont\rmfamily\itshape\color{ctpText}}
+\setkomafont{section}{\normalfont\rmfamily\itshape\Large\color{ctpText}}
+\setkomafont{subsection}{\normalfont\rmfamily\itshape\large\color{ctpText}}
+\RedeclareSectionCommand[beforeskip=16pt,afterskip=6pt]{section}
+\RedeclareSectionCommand[beforeskip=12pt,afterskip=4pt]{subsection}
+\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+\AddToHook{cmd/section/before}{\Needspace{7\baselineskip}}
+\renewcommand{\vocab}[1]{\textbf{\color{ctpMauve}#1}}
+
+\newenvironment{fullwidth}
+  {\begin{adjustwidth}{0pt}{-\dimexpr\marginparwidth+\marginparsep\relax}}
+  {\end{adjustwidth}}
+\newcommand{\newthought}[1]{\par\addvspace{\baselineskip}\noindent\textsc{#1}}
+
+% Unnumbered margin notes: \marginnote{...}; numbered notes: \sidenote{...}.
+% Floating notes avoid one another; explicit offsets use fixed marginnote
+% placement instead. Inspect dense margins after editing.
+\newcommand{\handoutmarginfont}{\normalfont\footnotesize\color{ctpSubtext1}
+  \setstretch{1.0}\RaggedRight\setlength{\parindent}{0pt}}
+\makeatletter
+\appto\@marginparreset{\handoutmarginfont}
+\makeatother
+\renewcommand*{\marginfont}{\handoutmarginfont}
+\captionsetup{font={footnotesize,color=ctpSubtext1},labelfont=normalfont,
+  justification=RaggedRight,singlelinecheck=false}
+% sidenotes applies named styles locally; keep their captions ragged too.
+\DeclareCaptionStyle{marginfigure}{font={footnotesize,color=ctpSubtext1},
+  justification=RaggedRight,singlelinecheck=false}
+\DeclareCaptionStyle{margintable}{font={footnotesize,color=ctpSubtext1},
+  justification=RaggedRight,singlelinecheck=false}
+\DeclareCaptionStyle{widefigure}{font={footnotesize,color=ctpSubtext1},
+  justification=RaggedRight,singlelinecheck=false}
+\DeclareCaptionStyle{widetable}{font={footnotesize,color=ctpSubtext1},
+  justification=RaggedRight,singlelinecheck=false}
+\DeclareCaptionStyle{sidecaption}{font={footnotesize,color=ctpSubtext1},
+  justification=RaggedRight,singlelinecheck=false}
+% Match the sample's footnotes-as-sidenotes behavior in the document body.
+\AtBeginDocument{\let\footnote\sidenote}
+% Keep everett's BibLaTeX/Biber setup. Ordinary \cite stays inline;
+% \sidecite prints a full reference in a numbered margin note.
+\newcommand{\sidecite}[1]{\sidenote{\fullcite{#1}.}}
+
+\newcommand{\handoutcourse}[1]{\gdef\handoutcoursename{#1}}
+\newcommand{\handoutrunningtitle}[1]{\gdef\handoutshorttitle{#1}}
+\handoutcourse{}
+\handoutrunningtitle{}
+\KOMAoptions{headsepline=false,headwidth=textwithmarginpar,
+  footwidth=textwithmarginpar}
+\clearpairofpagestyles
+\ihead{\handoutshorttitle}
+\ohead{\pagemark}
+\ofoot[\pagemark]{}
+\setkomafont{pageheadfoot}{\normalfont\footnotesize\color{ctpSubtext1}}
+\setkomafont{pagenumber}{\normalfont\footnotesize\color{ctpSubtext1}}
+
+\makeatletter
+\renewcommand{\maketitle}{%
+  \par\begingroup
+  \begin{fullwidth}
+    \setlength{\parindent}{0pt}
+    {\small\scshape\color{ctpSubtext1}\handoutcoursename\par}
+    \vspace{5mm}
+    {\rmfamily\itshape\fontsize{28}{32}\selectfont\@title\par}
+    \ifx\@subtitle\@empty\else
+      \vspace{2mm}{\large\itshape\color{ctpSubtext1}\@subtitle\par}
+    \fi
+    \vspace{5mm}
+    {\small\@author\par}
+    {\small\color{ctpSubtext1}\@date\par}
+    \@thanks
+  \end{fullwidth}
+  \endgroup\thispagestyle{plain}\vspace{3mm}}
+\makeatother
+\renewenvironment{abstract}
+  {\par\small\noindent\ignorespaces}
+  {\par\vspace{4pt}}
+
+% Theorem counters run through the handout, independently of sections.
+\declaretheoremstyle[headfont=\normalfont\itshape\color{ctpMauve},
+  bodyfont=\normalfont,spaceabove=8pt,spacebelow=4pt]{handoutexercise}
+\declaretheorem[style=handoutexercise,name=Exercise]{exercise}
+\crefname{exercise}{exercise}{exercises}
+\Crefname{exercise}{Exercise}{Exercises}
+
+% Theme-aware defaults for figures supplied by the author.
+\tikzset{every picture/.append style={color=ctpText}}
+\tikzcdset{every diagram/.append style={color=ctpText},
+  arrows={color=ctpText},labels={text=ctpText},background color=ctpBase}
+\pgfplotsset{every axis/.append style={
+  axis line style={draw=ctpSubtext1},tick style={draw=ctpSubtext1},
+  tick label style={color=ctpText},label style={color=ctpText},
+  legend style={fill=ctpMantle,draw=ctpSurface1,text=ctpText},
+  grid style={draw=ctpSurface0}}}

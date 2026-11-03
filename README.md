@@ -1,9 +1,9 @@
 # everett.sty
 
-A personal LaTeX setup for mathematical notes and books, with a complete example book.
+A personal LaTeX setup for mathematical notes, books, and handouts, with complete example templates.
 
-The supplied book has a **Panbook-inspired design** in Catppuccin Latte light
-and Macchiato dark modes: a narrow text column and
+The supplied book has a **Panbook-inspired design** with Catppuccin Frappé
+accents on white in light mode and Macchiato in dark mode: a narrow text column and
 wide right margin, Palatino-style text, colored section headings, theorem
 boxes, learning objectives, and numbered exercises. It keeps KOMA-Script and
 the existing mathematical commands; it does not require the Tufte document
@@ -13,7 +13,14 @@ class or Panbook's Markdown toolchain. The design is inspired by
 - **`everett.sty`** supplies the document style: Catppuccin colors by default, an optional `panbook` theorem style, chapter and page headings, diagrams, tables, algorithms, cross-references, and bibliography configuration.
 - **`macro.sty`** supplies mathematical notation: number sets, operators, delimiters, arrows, and shortcuts for algebra, geometry, analysis, and related subjects.
 
-Load the packages separately, with `everett` first when using both. The book template uses the KOMA-Script `scrbook` class. `everett.sty` assumes chapter and part commands and is not a drop-in style for `article`, `amsart`, or Beamer. `macro.sty` can also be used on its own.
+Load the packages separately, with `everett` first when using both. The book template uses the KOMA-Script `scrbook` class. The handout template uses `scrartcl` with `\usepackage[handout]{everett}`; this option disables chapter-specific formatting and part mini-contents. The package is not a drop-in style for standard `article`, `amsart`, Beamer, or `tufte-handout`. `macro.sty` can also be used on its own.
+
+The **handout template** takes its layout cues from the
+[Tufte-LaTeX sample handout](https://github.com/Tufte-LaTeX/tufte-latex/blob/master/sample-handout.tex):
+a narrow text column, a wide right margin, Palatino-style text, unnumbered
+italic headings, sidenotes, and margin and full-width graphics. It uses
+KOMA-Script with `everett.sty`, so no Tufte class or external image assets
+are required. Both Catppuccin light and dark modes are included.
 
 ## Quick start
 
@@ -35,14 +42,15 @@ Alternatively, run `make book` from the repository root. This refreshes the temp
 
 ### Light and dark modes
 
-Both modes color the page, text, links, headings, and boxes using the
-[official Catppuccin palettes](https://catppuccin.com/palette/). Latte is the
-default; Macchiato uses a dark blue-gray background and light text.
+Light mode uses the [official Frappé accent colors](https://catppuccin.com/palette/#frapp%C3%A9)
+on a pure white (`#FFFFFF`) page, with dark Frappé neutrals for body text
+and pale neutral tints for secondary surfaces. This is the default. Dark
+mode uses Macchiato with a dark blue-gray background and light text.
 
 From the repository root:
 
 ```sh
-make book-light   # Latte:     book-template/build/light/main-light.pdf
+make book-light   # Frappé on white: book-template/build/light/main-light.pdf
 make book-dark    # Macchiato: book-template/build/dark/main-dark.pdf
 make book-modes   # Build both, with separate auxiliary files.
 ```
@@ -94,7 +102,7 @@ The examples use pdfLaTeX. No shell escape, Python, external figure downloads, o
 
 ### Overleaf
 
-Zip the **contents** of `book-template` and [upload the ZIP as a project](https://docs.overleaf.com/managing-projects-and-files/uploading-a-project). Keep `main.tex`, `main-light.tex`, `main-dark.tex`, both `.sty` files, both `.bib` files, `preamble.tex`, `book-design.tex`, `macros/`, and `sections/` together. Exclude generated `build/` and `out/` directories. Select `main-light.tex` for Latte or `main-dark.tex` for Macchiato as the [main document](https://docs.overleaf.com/getting-started/recompiling-your-project/the-main-document), choose pdfLaTeX, and recompile. Select `main.tex` to use the default set in the preamble. The bibliography configuration requests Biber automatically.
+Zip the **contents** of `book-template` and [upload the ZIP as a project](https://docs.overleaf.com/managing-projects-and-files/uploading-a-project). Keep `main.tex`, `main-light.tex`, `main-dark.tex`, both `.sty` files, both `.bib` files, `preamble.tex`, `book-design.tex`, `macros/`, and `sections/` together. Exclude generated `build/` and `out/` directories. Select `main-light.tex` for Frappé on white or `main-dark.tex` for Macchiato as the [main document](https://docs.overleaf.com/getting-started/recompiling-your-project/the-main-document), choose pdfLaTeX, and recompile. Select `main.tex` to use the default set in the preamble. The bibliography configuration requests Biber automatically.
 
 ### Optional installation for multiple local projects
 
@@ -108,7 +116,7 @@ Place `everett.sty` and `macro.sty` inside its `tex/latex/everett/` subdirectory
 
 ## Start a document from scratch
 
-The minimal example below uses the base package's Latte appearance. Copy the
+The minimal example below uses the base package's Frappé on white appearance. Copy the
 complete `book-template` folder for the Panbook-inspired layout and its
 additional teaching environments.
 
@@ -223,8 +231,8 @@ The rings chapter demonstrates a commutative diagram and a `booktabs` table; the
 
 ### Colors, layout, and numbering
 
-The default mode is Catppuccin Latte. Use `\usepackage[light]{everett}` to
-select Latte explicitly, or `\usepackage[dark]{everett}` for Macchiato.
+The default mode uses Catppuccin Frappé accents on pure white. Use `\usepackage[light]{everett}` to
+select Frappé on white explicitly, or `\usepackage[dark]{everett}` for Macchiato.
 Both options set the page background, body text, and accent colors. They can
 be combined with `panbook`, for example `\usepackage[panbook,dark]{everett}`.
 If both `light` and `dark` are supplied, the last one wins. The supplied book
@@ -412,12 +420,89 @@ To add another database, register it in your preamble with `\addbibresource{addi
 
 To choose another citation style or backend, change the existing `biblatex` loading line in `everett.sty` and keep the template copy synchronized. Loading `biblatex` again with different options causes an option clash. Changing styles may also require revisiting the package's custom bibliography formatting.
 
+## Working with the handout template
+
+Build from the repository root:
+
+```sh
+make handout        # handout-template/build/main.pdf (light by default)
+make handout-light  # handout-template/build/light/main-light.pdf
+make handout-dark   # handout-template/build/dark/main-dark.pdf
+make handout-modes  # Both explicit modes
+```
+
+These targets refresh the local package copies before compiling. The
+`handout-template/` folder is portable: copy the whole folder to start a
+new project. From inside that folder, build with
+`latexmk -pdf -outdir=build main.tex`. For Overleaf, upload the folder's
+contents, choose pdfLaTeX, and select `main.tex`, `main-light.tex`, or
+`main-dark.tex` as the main document. The requirements are the same as the
+book template, including Biber.
+
+```text
+handout-template/
+  main.tex              # Metadata and a two-page mathematical sample
+  main-light.tex        # Explicit Frappé on white entry point
+  main-dark.tex         # Explicit Macchiato entry point
+  preamble.tex          # Theme, package loading, and your notation/settings
+  handout-design.tex    # Tufte-inspired typography and margin layout
+  everett.sty           # Portable copy of the root package
+  macro.sty             # Portable copy of the root package
+  references.bib        # Bibliography sources
+  images.bib            # External figure credits; empty in this sample
+```
+
+Edit the title, subtitle, author, course label, running title, and content
+in `main.tex`. Change the default theme in `preamble.tex` and the layout
+in `handout-design.tex`. The explicit entry points override the default
+theme. Numbered theorem environments retain their independent,
+document-wide counters. Sections are unnumbered by default; put
+`\setcounter{secnumdepth}{2}` after the design is loaded to number them.
+
+The template supplies these layout helpers:
+
+| Command or environment | Use |
+| --- | --- |
+| `\sidenote{...}` or `\footnote{...}` | A numbered note in the right margin |
+| `\marginnote{...}` | An unnumbered margin note |
+| `\sidecite{key}` | A full BibLaTeX reference in a numbered sidenote |
+| `\cite{key}` | An ordinary inline citation |
+| `marginfigure`, `margintable` | A small figure or table in the margin |
+| `figure*`, `table*` | A float spanning the text and margin columns |
+| `fullwidth` | Text spanning both columns |
+| `\newthought{Opening words}` | A paragraph opening in small caps |
+| `exercise` | A numbered exercise |
+
+For instance:
+
+```latex
+\newthought{Begin with an example.} Explain the main idea here.
+\sidenote{A short supporting observation.}
+
+\begin{theorem}\label{thm:sample}
+For every $x\in\RR$, $x^2\geq 0$.
+\end{theorem}
+\begin{proof}
+A square of a real number is nonnegative.
+\end{proof}
+```
+
+The handout adapts the sample's visual approach rather than its entire
+class interface. Use BibLaTeX/Biber and `\printbibliography`, as in the
+rest of this repository. Margin captions and notes use the current
+Catppuccin palette. Ordinary `figure` and `table` floats keep the main
+column width, with captions below; use `\sidecaption{...}` inside such a
+float to place its caption in the margin. Keep notes out of the vertical
+space occupied by full-width material, and check dense margins after
+editing. Notes placed with explicit offsets use fixed positioning and
+may need manual adjustment.
+
 ## Working with the book template
 
 ```text
 book-template/
   main.tex                         # Metadata, chapter order, bibliographies
-  main-light.tex                   # Explicit Latte entry point
+  main-light.tex                   # Explicit Frappé on white entry point
   main-dark.tex                    # Explicit Macchiato entry point
   preamble.tex                     # Packages and document-level formatting
   book-design.tex                  # Panbook-inspired layout, fonts, callouts
@@ -494,7 +579,7 @@ figure, a plot with a side caption, and a full-width notation table.
 Adjust the geometry, fonts, headings, and callouts in `book-design.tex`.
 The `panbook` package option controls the existing theorem styles; it is
 opt-in so other documents can keep the base styling. Both styles support
-Latte light and Macchiato dark modes. Select the book's mode through
+Frappé accents on white in light mode and Macchiato in dark mode. Select the book's mode through
 `\booktheme` or the explicit entry files described above.
 
 ### Add a chapter
